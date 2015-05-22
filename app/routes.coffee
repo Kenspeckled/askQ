@@ -1,6 +1,7 @@
 #homeController = require 'home.coffee'
 sessionController = require 'session'
 
+landingPageController = require 'landingPage.coffee'
 questionController = require 'question.coffee'
 routes = (router) ->
   if !(_scriptContext == 'server' or _scriptContext == 'client')
@@ -8,6 +9,7 @@ routes = (router) ->
 
   #router.get '/', homeController.index
   # router.get '/', homeController.index
+  router.get '/', landingPageController.index
   router.get '/:url', questionController.index
 
   if _scriptContext == 'client'
