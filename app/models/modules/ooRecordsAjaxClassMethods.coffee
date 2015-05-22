@@ -58,6 +58,18 @@ AJAXClassMethods =
   where: (opts) ->
     ajax.get @indexPath, opts
 
+  addQuestion: (opts) ->
+    ajax.post @addQuestionPath, opts
+
+  vote: (opts) ->
+    ajax.post @votePath, opts
+
+  flag: (opts) ->
+    ajax.post @flagPath, opts
+
+  index: (opts) ->
+    ajax.get @indexPath, opts
+
   #create: (opts) ->
   #  ajax.post @createURL, opts
 
