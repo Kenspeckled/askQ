@@ -33,12 +33,28 @@ require('listenerRegistery.coffee')();
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../frameworkCore/ActionHandler.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/ActionHandler.coffee","../frameworkCore/Base.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/Base.coffee","../frameworkCore/DataCache.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/DataCache.coffee","../frameworkCore/ObjectOrientedRecord.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/ObjectOrientedRecord.coffee","../frameworkCore/clientRouter/ClientRouter.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/clientRouter/ClientRouter.coffee","../frameworkCore/utilities.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/utilities.coffee","listenerRegistery.coffee":"/Users/Benjamin/Dropbox/apps/Qs/app/listenerRegistery.coffee","lodash":"/Users/Benjamin/Dropbox/apps/Qs/node_modules/lodash/index.js","react":"/Users/Benjamin/Dropbox/apps/Qs/node_modules/react/react.js","routes.coffee":"/Users/Benjamin/Dropbox/apps/Qs/app/routes.coffee"}],"/Users/Benjamin/Dropbox/apps/Qs/app/listenerRegistery.coffee":[function(require,module,exports){
+},{"../frameworkCore/ActionHandler.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/ActionHandler.coffee","../frameworkCore/Base.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/Base.coffee","../frameworkCore/DataCache.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/DataCache.coffee","../frameworkCore/ObjectOrientedRecord.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/ObjectOrientedRecord.coffee","../frameworkCore/clientRouter/ClientRouter.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/clientRouter/ClientRouter.coffee","../frameworkCore/utilities.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/utilities.coffee","listenerRegistery.coffee":"/Users/Benjamin/Dropbox/apps/Qs/app/listenerRegistery.coffee","lodash":"/Users/Benjamin/Dropbox/apps/Qs/node_modules/lodash/index.js","react":"/Users/Benjamin/Dropbox/apps/Qs/node_modules/react/react.js","routes.coffee":"/Users/Benjamin/Dropbox/apps/Qs/app/routes.coffee"}],"/Users/Benjamin/Dropbox/apps/Qs/app/controllers/client/question.coffee":[function(require,module,exports){
+var QuestionIndex, questionController;
+
+QuestionIndex = require('views/components/questions/index.coffee');
+
+questionController = {
+  index: function(ctx) {
+    var props;
+    console.log(ctx.params.url);
+    props = {};
+    return React.render(React.createElement(QuestionIndex, props), document.getElementById('content'));
+  }
+};
+
+module.exports = questionController;
+
+
+
+},{"views/components/questions/index.coffee":"/Users/Benjamin/Dropbox/apps/Qs/app/views/components/questions/index.coffee"}],"/Users/Benjamin/Dropbox/apps/Qs/app/listenerRegistery.coffee":[function(require,module,exports){
 var listenerRegistery;
 
-listenerRegistery = function() {
-  return ActionHandler.registerListenersOn(something);
-};
+listenerRegistery = function() {};
 
 module.exports = listenerRegistery;
 
@@ -204,18 +220,55 @@ module.exports = PubSub;
 
 
 },{}],"/Users/Benjamin/Dropbox/apps/Qs/app/routes.coffee":[function(require,module,exports){
-var routes;
+var questionController, routes;
+
+questionController = require('question.coffee');
 
 routes = function(router) {
   if (!(_scriptContext === 'server' || _scriptContext === 'client')) {
     throw new Error('_scriptContext not defined properly');
   }
+  router.get('/:url', questionController.index);
   if (_scriptContext === 'client') {
     return router.start();
   }
 };
 
 module.exports = routes;
+
+
+
+},{"question.coffee":"/Users/Benjamin/Dropbox/apps/Qs/app/controllers/client/question.coffee"}],"/Users/Benjamin/Dropbox/apps/Qs/app/views/components/questions/index.coffee":[function(require,module,exports){
+var QuestionList, div,
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
+
+div = React.DOM.div;
+
+QuestionList = (function(superClass) {
+  extend(QuestionList, superClass);
+
+  function QuestionList() {
+    return QuestionList.__super__.constructor.apply(this, arguments);
+  }
+
+  QuestionList.prototype.displayName = 'QuestionList';
+
+  QuestionList.prototype.render = function() {
+    return div({
+      id: 'question-index'
+    }, div({
+      className: 'row'
+    }, div({
+      className: 'col-sm-12'
+    }, div(null, 'hello'))));
+  };
+
+  return QuestionList;
+
+})(React.Component);
+
+module.exports = QuestionList;
 
 
 

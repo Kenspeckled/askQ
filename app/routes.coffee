@@ -1,12 +1,14 @@
 #homeController = require 'home.coffee'
 sessionController = require 'session'
 
+questionController = require 'question.coffee'
 routes = (router) ->
   if !(_scriptContext == 'server' or _scriptContext == 'client')
     throw new Error('_scriptContext not defined properly')
 
   #router.get '/', homeController.index
   # router.get '/', homeController.index
+  router.get '/:url', questionController.index
 
   if _scriptContext == 'client'
     router.start()

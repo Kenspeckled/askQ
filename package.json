@@ -32,7 +32,7 @@
   },
   "scripts": {
     "postinstall": "bower install",
-    "start": "SHOW_CAPRERA_ERRORS=true coffee app/serverApp.coffee",
+    "start": "SHOW_QS_ERRORS=true coffee app/serverApp.coffee",
     "test": "jasmine"
   },
   "repository": {
