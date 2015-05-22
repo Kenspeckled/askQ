@@ -11,15 +11,12 @@ global.BaseClass = require '../frameworkCore/Base.coffee'
 global.ObjectOrientedRecord = require '../frameworkCore/ObjectOrientedRecord.coffee'
 global.ActionHandler = require '../frameworkCore/ActionHandler.coffee'
 
-#require('productDataInit.coffee')()
-
 express = require 'express'
 server = express()
 
 server.use express.static('public')
 server.set('views', __dirname + '/views')
 server.set('view engine', 'jade')
-
 
 require('routes.coffee')(server, 'server') # Initalise get routes
 
