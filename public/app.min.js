@@ -58,7 +58,19 @@ QuestionIndex = require('views/components/questions/index.coffee');
 questionController = {
   index: function(ctx) {
     var props;
-    props = {};
+    props = {
+      questions: [
+        {
+          question: "What?",
+          score: 112,
+          flags: 2
+        }, {
+          question: "Why?",
+          score: 10,
+          flags: 0
+        }
+      ]
+    };
     return React.render(React.createElement(QuestionIndex, props), document.getElementById('content'));
   }
 };
@@ -319,41 +331,98 @@ module.exports = LandingPage;
 
 
 
-},{}],"/Users/Benjamin/Dropbox/apps/Qs/app/views/components/questions/index.coffee":[function(require,module,exports){
-var QuestionList, div,
+},{}],"/Users/Benjamin/Dropbox/apps/Qs/app/views/components/questions/_QuestionBubble.coffee":[function(require,module,exports){
+var QuestionBubble, div,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
 div = React.DOM.div;
 
-QuestionList = (function(superClass) {
-  extend(QuestionList, superClass);
+QuestionBubble = (function(superClass) {
+  extend(QuestionBubble, superClass);
 
-  function QuestionList() {
-    return QuestionList.__super__.constructor.apply(this, arguments);
+  function QuestionBubble() {
+    return QuestionBubble.__super__.constructor.apply(this, arguments);
   }
 
-  QuestionList.prototype.displayName = 'QuestionList';
+  QuestionBubble.prototype.displayName = 'QuestionBubble';
 
-  QuestionList.prototype.render = function() {
+  QuestionBubble.prototype.render = function() {
     return div({
-      id: 'question-index'
+      className: 'question-bubble'
+    }, div({
+      className: 'row'
+    }, div({
+      className: 'col-xs-12'
+    }, div({
+      className: 'row'
+    }, div({
+      className: 'col-xs-10'
+    }, div(null, this.props.question)), div({
+      className: 'col-xs-2'
+    }, div({
+      className: 'up-vote'
+    }), div(null, this.props.score), div({
+      className: 'down-vote'
+    }))))));
+  };
+
+  return QuestionBubble;
+
+})(React.Component);
+
+module.exports = QuestionBubble;
+
+
+
+},{}],"/Users/Benjamin/Dropbox/apps/Qs/app/views/components/questions/index.coffee":[function(require,module,exports){
+var QuestionBubble, QuestionIndex, div,
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
+
+QuestionBubble = require('views/components/questions/_QuestionBubble.coffee');
+
+div = React.DOM.div;
+
+QuestionIndex = (function(superClass) {
+  extend(QuestionIndex, superClass);
+
+  function QuestionIndex() {
+    return QuestionIndex.__super__.constructor.apply(this, arguments);
+  }
+
+  QuestionIndex.prototype.displayName = 'QuestionIndex';
+
+  QuestionIndex.prototype.render = function() {
+    var question;
+    return div({
+      id: 'question-index',
+      className: 'container'
     }, div({
       className: 'row'
     }, div({
       className: 'col-sm-12'
-    }, div(null, 'hello'))));
+    }, (function() {
+      var i, len, ref, results;
+      ref = this.props.questions;
+      results = [];
+      for (i = 0, len = ref.length; i < len; i++) {
+        question = ref[i];
+        results.push(React.createElement(QuestionBubble, question));
+      }
+      return results;
+    }).call(this))));
   };
 
-  return QuestionList;
+  return QuestionIndex;
 
 })(React.Component);
 
-module.exports = QuestionList;
+module.exports = QuestionIndex;
 
 
 
-},{}],"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/ActionHandler.coffee":[function(require,module,exports){
+},{"views/components/questions/_QuestionBubble.coffee":"/Users/Benjamin/Dropbox/apps/Qs/app/views/components/questions/_QuestionBubble.coffee"}],"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/ActionHandler.coffee":[function(require,module,exports){
 var ActionHandler, Base, publishSubscribe,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;

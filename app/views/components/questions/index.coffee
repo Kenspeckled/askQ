@@ -1,13 +1,16 @@
+QuestionBubble = require 'views/components/questions/_QuestionBubble.coffee'
 {div} = React.DOM
 
-class QuestionList extends React.Component
+class QuestionIndex extends React.Component
 
-  displayName: 'QuestionList'
+  displayName: 'QuestionIndex'
 
   render: ->
-    div id: 'question-index',
+    div id: 'question-index', className: 'container',
       div className: 'row',
         div className: 'col-sm-12',
-          div null, 'hello'
+          for question in @props.questions
+            React.createElement QuestionBubble, question 
+          
 
-module.exports = QuestionList
+module.exports = QuestionIndex
