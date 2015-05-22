@@ -32,21 +32,19 @@ OORecordsORM =
     @client.hincrby 'question:' + questionNumber, 'flags', 1
 
   getQuestions: (url) ->
-    questionsPromise = new Promise (resolve) ->
+    questionsPromise = new Promise (resolve) =>
       @client.lrange 'questionsForUrl:' + url, 0, -1, (error, questionArray) =>
         resolve questionArray
 
-    # questionsPromise.then (questionArray) =>
-    #   _.map questionArray, (question) =>
-    #     @client.hgetall 'question:' + questionNumber
+    questionsPromise.then (questionArray) =>
+      promises = _.map questionArray, (questionNumber) =>
+        new Promise (resolve) =>
+          @client.hgetall 'question:' + url + ':' + questionNumber, (error, response) ->
+            resolve(response)
+
+      Promise.all(promises)
 
 
-    #     for questionNumber in questionArray
-    #       multi.hgetall 'question:' + questionNumber
-    #     multi.exec (error, questions) =>
-    #       resolve questions
-    # questionsPromise.then (questions) ->
-    #   console.log questions
 
 
 

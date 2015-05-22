@@ -3,7 +3,7 @@ session = require 'models/extendedModels/session'
 sessionController =
 
   session: (req, res) ->
-    url = req.params.sessionUrl
+    url = req.path.replace('/', '')
     session.createSession(url)
 
   addQuestion: (req, res) ->
@@ -21,8 +21,12 @@ sessionController =
     session.flag(questionNumber)
 
   index: (req, res) ->
-    url = req.params.sessionUrl
-    session.getQuestions(url)
+    url = req.query.url
+    questions = session.getQuestions(url)
+    questions.then (questionArray) ->
+      console.log questionArray
+    , (err)->
+      console.log err
 
 
 
