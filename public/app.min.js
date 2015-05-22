@@ -58,7 +58,6 @@ QuestionIndex = require('views/components/questions/index.coffee');
 questionController = {
   index: function(ctx) {
     var props;
-    console.log(ctx.params.url);
     props = {};
     return React.render(React.createElement(QuestionIndex, props), document.getElementById('content'));
   }
@@ -259,42 +258,38 @@ module.exports = routes;
 
 
 },{"landingPage.coffee":"/Users/Benjamin/Dropbox/apps/Qs/app/controllers/client/landingPage.coffee","question.coffee":"/Users/Benjamin/Dropbox/apps/Qs/app/controllers/client/question.coffee"}],"/Users/Benjamin/Dropbox/apps/Qs/app/views/components/landingPage/index.coffee":[function(require,module,exports){
-var LandingPage, button, div, form, h1, input, ref,
-  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  hasProp = {}.hasOwnProperty;
+var LandingPage, button, div, form, h1, input, ref;
 
 ref = React.DOM, div = ref.div, h1 = ref.h1, form = ref.form, input = ref.input, button = ref.button;
 
-LandingPage = (function(superClass) {
-  extend(LandingPage, superClass);
-
-  function LandingPage() {
-    this.handleSubmit = bind(this.handleSubmit, this);
-    this.handleUrlChange = bind(this.handleUrlChange, this);
-    return LandingPage.__super__.constructor.apply(this, arguments);
-  }
-
-  LandingPage.prototype.displayName = 'LandingPage';
-
-  LandingPage.prototype.getInitialState = function() {
+LandingPage = React.createClass({
+  displayName: 'LandingPage',
+  generateRandomUrl: function() {
+    var url, word1Array, word2Array, word3Array;
+    word1Array = ['two', 'three', 'four'];
+    word2Array = ['orange', 'green', 'blue'];
+    word3Array = ['rocks', 'papers', 'scissors'];
+    url = [];
+    url.push(word1Array[Math.floor(Math.random() * word1Array.length)]);
+    url.push(word2Array[Math.floor(Math.random() * word2Array.length)]);
+    url.push(word3Array[Math.floor(Math.random() * word3Array.length)]);
+    return url.join('-');
+  },
+  getInitialState: function() {
     return {
-      url: null
+      url: this.generateRandomUrl()
     };
-  };
-
-  LandingPage.prototype.handleUrlChange = function(ev) {
+  },
+  handleUrlChange: function(ev) {
     return this.setState({
       url: ev.target.value
     });
-  };
-
-  LandingPage.prototype.handleSubmit = function(ev) {
+  },
+  handleSubmit: function(ev) {
     ev.preventDefault();
-    return console.log("go to " + this.state.url);
-  };
-
-  LandingPage.prototype.render = function() {
+    return window.location = this.state.url;
+  },
+  render: function() {
     return div({
       id: 'landing-page',
       className: 'fluid-container'
@@ -311,16 +306,14 @@ LandingPage = (function(superClass) {
     }, input({
       type: 'text',
       name: 'new-session',
-      onChange: this.handleUrlChange
+      onChange: this.handleUrlChange,
+      value: this.state.url
     }), button({
       type: 'submit',
       name: 'new-session'
     }, 'Create URL')))));
-  };
-
-  return LandingPage;
-
-})(React.Component);
+  }
+});
 
 module.exports = LandingPage;
 

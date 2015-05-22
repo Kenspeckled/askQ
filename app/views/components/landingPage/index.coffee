@@ -1,18 +1,28 @@
 {div, h1, form, input, button} = React.DOM
 
-class LandingPage extends React.Component
+LandingPage = React.createClass 
 
   displayName: 'LandingPage'
 
-  getInitialState: ->
-    url: null
+  generateRandomUrl: ->
+    word1Array = ['two', 'three', 'four']
+    word2Array = ['orange', 'green', 'blue']
+    word3Array = ['rocks', 'papers', 'scissors']
+    url = []
+    url.push word1Array[Math.floor(Math.random()*word1Array.length)]
+    url.push word2Array[Math.floor(Math.random()*word2Array.length)]
+    url.push word3Array[Math.floor(Math.random()*word3Array.length)]
+    url.join '-'
 
-  handleUrlChange: (ev) =>
+  getInitialState: ->
+    url: @generateRandomUrl()
+
+  handleUrlChange: (ev) ->
     @setState url: ev.target.value
 
-  handleSubmit: (ev) =>
+  handleSubmit: (ev) ->
     ev.preventDefault()
-    console.log "go to " + @state.url
+    window.location = @state.url
 
   render: ->
     div id: 'landing-page', className: 'fluid-container',
@@ -22,7 +32,7 @@ class LandingPage extends React.Component
       div className: 'row',
         div className: 'col-sm-12',
           form onSubmit: @handleSubmit,
-            input type: 'text', name: 'new-session', onChange: @handleUrlChange
+            input type: 'text', name: 'new-session', onChange: @handleUrlChange, value: @state.url
             button type: 'submit', name: 'new-session', 'Create URL'
 
 
