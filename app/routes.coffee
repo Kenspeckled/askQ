@@ -12,12 +12,6 @@ routes = (router) ->
   if !(_scriptContext == 'server' or _scriptContext == 'client')
     throw new Error('_scriptContext not defined properly')
 
-  #router.get '/', homeController.index
-  # router.get '/', homeController.index
-  router.get '/', landingPageController.index
-  #router.get '/:url', questionController.index
-  #router.get '/', homeController.index
-  # router.get '/', homeController.index
   router.get '/', landingPageController.index
   router.get '/:url', questionController.index
 
@@ -31,7 +25,7 @@ routes = (router) ->
     router.use(multer()) # for parsing multipart/form-data
 
 
-    router.get '/:sessionUrl', sessionController.session
+    # router.get '/:sessionUrl', sessionController.session
     router.post '/api/add-question', sessionController.addQuestion
     router.post '/api/vote', sessionController.vote
     router.post '/api/flag', sessionController.flag

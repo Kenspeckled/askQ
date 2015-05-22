@@ -1,8 +1,11 @@
 QuestionIndex = require 'views/components/questions/index.coffee'
+session = require 'models/extendedModels/session'
 
 questionController =
 
   index: (req, res) ->
+    url = req.path.replace('/', '')
+    session.createSession(url)
     props = {}
     try
       element = React.createElement(QuestionIndex, props)

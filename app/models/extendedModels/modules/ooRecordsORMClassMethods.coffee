@@ -9,6 +9,7 @@ OORecordsORM =
     @client = redis.createClient()
 
   createSession: (url) ->
+    console.log url
     @client.sadd 'activeUrls', url
     # if time
     #   setTimeout @finishSession, time, url
