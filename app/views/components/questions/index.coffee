@@ -1,4 +1,6 @@
+QuestionInput = require 'views/components/questions/_QuestionInput.coffee'
 QuestionBubble = require 'views/components/questions/_QuestionBubble.coffee'
+
 {div} = React.DOM
 
 class QuestionIndex extends React.Component
@@ -11,6 +13,9 @@ class QuestionIndex extends React.Component
         div className: 'col-sm-12',
           for question in @props.questions
             React.createElement QuestionBubble, question 
+      div className: 'row',
+        div className: 'col-sm-12',
+          React.createElement QuestionInput
           
 
 module.exports = QuestionIndex

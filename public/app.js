@@ -375,10 +375,73 @@ module.exports = QuestionBubble;
 
 
 
-},{}],"/Users/Benjamin/Dropbox/apps/Qs/app/views/components/questions/index.coffee":[function(require,module,exports){
-var QuestionBubble, QuestionIndex, div,
+},{}],"/Users/Benjamin/Dropbox/apps/Qs/app/views/components/questions/_QuestionInput.coffee":[function(require,module,exports){
+var QuestionInput, button, div, form, ref, textarea,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
+
+ref = React.DOM, div = ref.div, form = ref.form, textarea = ref.textarea, button = ref.button;
+
+QuestionInput = (function(superClass) {
+  extend(QuestionInput, superClass);
+
+  function QuestionInput() {
+    return QuestionInput.__super__.constructor.apply(this, arguments);
+  }
+
+  QuestionInput.prototype.displayName = 'QuestionInput';
+
+  QuestionInput.prototype.getInitialState = function() {
+    return {
+      questionToAsk: ''
+    };
+  };
+
+  QuestionInput.prototype.updateQuestionToAsk = function(ev) {
+    return this.setState({
+      questionToAsk: ev.target.value
+    });
+  };
+
+  QuestionInput.prototype.handleSubmit = function(ev) {
+    ev.preventDefault();
+    return console.log("ASK " + this.state.questionToAsk);
+  };
+
+  QuestionInput.prototype.render = function() {
+    return div({
+      className: 'question-input'
+    }, div({
+      className: 'row'
+    }, div({
+      className: 'col-xs-12'
+    }, form({
+      className: 'form',
+      onSubmit: this.handleSubmit
+    }, textarea({
+      name: 'questionToAsk',
+      className: 'form-control',
+      onChange: this.updateQuestionToAsk
+    }), button({
+      type: 'submit',
+      className: 'btn'
+    }, 'ASK')))));
+  };
+
+  return QuestionInput;
+
+})(React.Component);
+
+module.exports = QuestionInput;
+
+
+
+},{}],"/Users/Benjamin/Dropbox/apps/Qs/app/views/components/questions/index.coffee":[function(require,module,exports){
+var QuestionBubble, QuestionIndex, QuestionInput, div,
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
+
+QuestionInput = require('views/components/questions/_QuestionInput.coffee');
 
 QuestionBubble = require('views/components/questions/_QuestionBubble.coffee');
 
@@ -411,7 +474,11 @@ QuestionIndex = (function(superClass) {
         results.push(React.createElement(QuestionBubble, question));
       }
       return results;
-    }).call(this))));
+    }).call(this))), div({
+      className: 'row'
+    }, div({
+      className: 'col-sm-12'
+    }, React.createElement(QuestionInput))));
   };
 
   return QuestionIndex;
@@ -422,7 +489,7 @@ module.exports = QuestionIndex;
 
 
 
-},{"views/components/questions/_QuestionBubble.coffee":"/Users/Benjamin/Dropbox/apps/Qs/app/views/components/questions/_QuestionBubble.coffee"}],"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/ActionHandler.coffee":[function(require,module,exports){
+},{"views/components/questions/_QuestionBubble.coffee":"/Users/Benjamin/Dropbox/apps/Qs/app/views/components/questions/_QuestionBubble.coffee","views/components/questions/_QuestionInput.coffee":"/Users/Benjamin/Dropbox/apps/Qs/app/views/components/questions/_QuestionInput.coffee"}],"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/ActionHandler.coffee":[function(require,module,exports){
 var ActionHandler, Base, publishSubscribe,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
