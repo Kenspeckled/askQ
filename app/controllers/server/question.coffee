@@ -3,7 +3,6 @@ QuestionIndex = require 'views/components/questions/index.coffee'
 questionController =
 
   index: (req, res) ->
-    console.log req.params.url
     props = {}
     try
       element = React.createElement(QuestionIndex, props)

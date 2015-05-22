@@ -6,7 +6,8 @@ landingPageController = require 'landingPage.coffee'
 questionController = require 'question.coffee'
 #homeController = require 'home.coffee'
 sessionController = require 'session'
-
+landingPageController = require 'landingPage.coffee'
+questionController = require 'question.coffee'
 routes = (router) ->
   if !(_scriptContext == 'server' or _scriptContext == 'client')
     throw new Error('_scriptContext not defined properly')
@@ -17,6 +18,8 @@ routes = (router) ->
   #router.get '/:url', questionController.index
   #router.get '/', homeController.index
   # router.get '/', homeController.index
+  router.get '/', landingPageController.index
+  router.get '/:url', questionController.index
 
   if _scriptContext == 'client'
     router.start()
