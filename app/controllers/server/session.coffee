@@ -7,8 +7,8 @@ sessionController =
     session.createSession(url)
 
   addQuestion: (req, res) ->
-    url = req.params.sessionUrl
-    question = req.params.question
+    url = req.body.sessionUrl
+    question = req.body.question
     session.addQuestion(url, question)
 
   vote: (req, res) ->

@@ -19,8 +19,9 @@ OORecordsORM =
   addQuestion: (url, questionText) ->
     @client.incr 'questionId:' + url, (error, questionNumber) =>
       console.log 'questionNumber' ,questionNumber
+      console.log 'questionText', questionText
       @client.rpush 'questionsForUrl:' + url, questionNumber
-      @client.hset 'question:' + questionNumber, 'text', questionText
+      @client.hset 'question:'+ url + ':' + questionNumber, 'text', questionText
 
   vote: (questionNumber, condition) ->
     voteModifier = -1 if condition == 'down'
