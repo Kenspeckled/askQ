@@ -33,7 +33,24 @@ require('listenerRegistery.coffee')();
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../frameworkCore/ActionHandler.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/ActionHandler.coffee","../frameworkCore/Base.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/Base.coffee","../frameworkCore/DataCache.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/DataCache.coffee","../frameworkCore/ObjectOrientedRecord.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/ObjectOrientedRecord.coffee","../frameworkCore/clientRouter/ClientRouter.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/clientRouter/ClientRouter.coffee","../frameworkCore/utilities.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/utilities.coffee","listenerRegistery.coffee":"/Users/Benjamin/Dropbox/apps/Qs/app/listenerRegistery.coffee","lodash":"/Users/Benjamin/Dropbox/apps/Qs/node_modules/lodash/index.js","react":"/Users/Benjamin/Dropbox/apps/Qs/node_modules/react/react.js","routes.coffee":"/Users/Benjamin/Dropbox/apps/Qs/app/routes.coffee"}],"/Users/Benjamin/Dropbox/apps/Qs/app/controllers/client/question.coffee":[function(require,module,exports){
+},{"../frameworkCore/ActionHandler.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/ActionHandler.coffee","../frameworkCore/Base.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/Base.coffee","../frameworkCore/DataCache.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/DataCache.coffee","../frameworkCore/ObjectOrientedRecord.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/ObjectOrientedRecord.coffee","../frameworkCore/clientRouter/ClientRouter.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/clientRouter/ClientRouter.coffee","../frameworkCore/utilities.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/utilities.coffee","listenerRegistery.coffee":"/Users/Benjamin/Dropbox/apps/Qs/app/listenerRegistery.coffee","lodash":"/Users/Benjamin/Dropbox/apps/Qs/node_modules/lodash/index.js","react":"/Users/Benjamin/Dropbox/apps/Qs/node_modules/react/react.js","routes.coffee":"/Users/Benjamin/Dropbox/apps/Qs/app/routes.coffee"}],"/Users/Benjamin/Dropbox/apps/Qs/app/controllers/client/landingPage.coffee":[function(require,module,exports){
+var LandingPage, landingPageController;
+
+LandingPage = require('views/components/landingPage/index.coffee');
+
+landingPageController = {
+  index: function(ctx) {
+    var props;
+    props = {};
+    return React.render(React.createElement(LandingPage, props), document.getElementById('content'));
+  }
+};
+
+module.exports = landingPageController;
+
+
+
+},{"views/components/landingPage/index.coffee":"/Users/Benjamin/Dropbox/apps/Qs/app/views/components/landingPage/index.coffee"}],"/Users/Benjamin/Dropbox/apps/Qs/app/controllers/client/question.coffee":[function(require,module,exports){
 var QuestionIndex, questionController;
 
 QuestionIndex = require('views/components/questions/index.coffee');
@@ -220,7 +237,9 @@ module.exports = PubSub;
 
 
 },{}],"/Users/Benjamin/Dropbox/apps/Qs/app/routes.coffee":[function(require,module,exports){
-var questionController, routes;
+var landingPageController, questionController, routes;
+
+landingPageController = require('landingPage.coffee');
 
 questionController = require('question.coffee');
 
@@ -228,6 +247,7 @@ routes = function(router) {
   if (!(_scriptContext === 'server' || _scriptContext === 'client')) {
     throw new Error('_scriptContext not defined properly');
   }
+  router.get('/', landingPageController.index);
   router.get('/:url', questionController.index);
   if (_scriptContext === 'client') {
     return router.start();
@@ -238,7 +258,75 @@ module.exports = routes;
 
 
 
-},{"question.coffee":"/Users/Benjamin/Dropbox/apps/Qs/app/controllers/client/question.coffee"}],"/Users/Benjamin/Dropbox/apps/Qs/app/views/components/questions/index.coffee":[function(require,module,exports){
+},{"landingPage.coffee":"/Users/Benjamin/Dropbox/apps/Qs/app/controllers/client/landingPage.coffee","question.coffee":"/Users/Benjamin/Dropbox/apps/Qs/app/controllers/client/question.coffee"}],"/Users/Benjamin/Dropbox/apps/Qs/app/views/components/landingPage/index.coffee":[function(require,module,exports){
+var LandingPage, button, div, form, h1, input, ref,
+  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
+
+ref = React.DOM, div = ref.div, h1 = ref.h1, form = ref.form, input = ref.input, button = ref.button;
+
+LandingPage = (function(superClass) {
+  extend(LandingPage, superClass);
+
+  function LandingPage() {
+    this.handleSubmit = bind(this.handleSubmit, this);
+    this.handleUrlChange = bind(this.handleUrlChange, this);
+    return LandingPage.__super__.constructor.apply(this, arguments);
+  }
+
+  LandingPage.prototype.displayName = 'LandingPage';
+
+  LandingPage.prototype.getInitialState = function() {
+    return {
+      url: null
+    };
+  };
+
+  LandingPage.prototype.handleUrlChange = function(ev) {
+    return this.setState({
+      url: ev.target.value
+    });
+  };
+
+  LandingPage.prototype.handleSubmit = function(ev) {
+    ev.preventDefault();
+    return console.log("go to " + this.state.url);
+  };
+
+  LandingPage.prototype.render = function() {
+    return div({
+      id: 'landing-page',
+      className: 'fluid-container'
+    }, div({
+      className: 'row'
+    }, div({
+      className: 'col-sm-12'
+    }, h1(null, 'Qs'))), div({
+      className: 'row'
+    }, div({
+      className: 'col-sm-12'
+    }, form({
+      onSubmit: this.handleSubmit
+    }, input({
+      type: 'text',
+      name: 'new-session',
+      onChange: this.handleUrlChange
+    }), button({
+      type: 'submit',
+      name: 'new-session'
+    }, 'Create URL')))));
+  };
+
+  return LandingPage;
+
+})(React.Component);
+
+module.exports = LandingPage;
+
+
+
+},{}],"/Users/Benjamin/Dropbox/apps/Qs/app/views/components/questions/index.coffee":[function(require,module,exports){
 var QuestionList, div,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
