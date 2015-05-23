@@ -4,10 +4,12 @@ questionController =
 
   index: (ctx) ->
     props = questions: [
+      key: 'abc1'
       question: "What?"
       score: 112
       flags: 2
     ,
+      key: 'abc2'
       question: "Why?"
       score: 10
       flags: 0

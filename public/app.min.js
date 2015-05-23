@@ -16,6 +16,8 @@ global.ObjectOrientedRecord = require('../frameworkCore/ObjectOrientedRecord.cof
 
 global.ActionHandler = require('../frameworkCore/ActionHandler.coffee');
 
+global.PublishSubscribe = require('models/modules/pubSub.coffee');
+
 ClientRouter = require('../frameworkCore/clientRouter/ClientRouter.coffee');
 
 DataCache = require('../frameworkCore/DataCache.coffee');
@@ -33,7 +35,7 @@ require('listenerRegistery.coffee')();
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../frameworkCore/ActionHandler.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/ActionHandler.coffee","../frameworkCore/Base.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/Base.coffee","../frameworkCore/DataCache.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/DataCache.coffee","../frameworkCore/ObjectOrientedRecord.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/ObjectOrientedRecord.coffee","../frameworkCore/clientRouter/ClientRouter.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/clientRouter/ClientRouter.coffee","../frameworkCore/utilities.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/utilities.coffee","listenerRegistery.coffee":"/Users/Benjamin/Dropbox/apps/Qs/app/listenerRegistery.coffee","lodash":"/Users/Benjamin/Dropbox/apps/Qs/node_modules/lodash/index.js","react":"/Users/Benjamin/Dropbox/apps/Qs/node_modules/react/react.js","routes.coffee":"/Users/Benjamin/Dropbox/apps/Qs/app/routes.coffee"}],"/Users/Benjamin/Dropbox/apps/Qs/app/controllers/client/landingPage.coffee":[function(require,module,exports){
+},{"../frameworkCore/ActionHandler.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/ActionHandler.coffee","../frameworkCore/Base.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/Base.coffee","../frameworkCore/DataCache.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/DataCache.coffee","../frameworkCore/ObjectOrientedRecord.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/ObjectOrientedRecord.coffee","../frameworkCore/clientRouter/ClientRouter.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/clientRouter/ClientRouter.coffee","../frameworkCore/utilities.coffee":"/Users/Benjamin/Dropbox/apps/Qs/frameworkCore/utilities.coffee","listenerRegistery.coffee":"/Users/Benjamin/Dropbox/apps/Qs/app/listenerRegistery.coffee","lodash":"/Users/Benjamin/Dropbox/apps/Qs/node_modules/lodash/index.js","models/modules/pubSub.coffee":"/Users/Benjamin/Dropbox/apps/Qs/app/models/modules/pubSub.coffee","react":"/Users/Benjamin/Dropbox/apps/Qs/node_modules/react/react.js","routes.coffee":"/Users/Benjamin/Dropbox/apps/Qs/app/routes.coffee"}],"/Users/Benjamin/Dropbox/apps/Qs/app/controllers/client/landingPage.coffee":[function(require,module,exports){
 var LandingPage, landingPageController;
 
 LandingPage = require('views/components/landingPage/index.coffee');
@@ -61,10 +63,12 @@ questionController = {
     props = {
       questions: [
         {
+          key: 'abc1',
           question: "What?",
           score: 112,
           flags: 2
         }, {
+          key: 'abc2',
           question: "Why?",
           score: 10,
           flags: 0
@@ -289,8 +293,13 @@ LandingPage = React.createClass({
   },
   getInitialState: function() {
     return {
-      url: this.generateRandomUrl()
+      url: null
     };
+  },
+  componentDidMount: function() {
+    return this.setState({
+      url: this.generateRandomUrl()
+    });
   },
   handleUrlChange: function(ev) {
     return this.setState({
@@ -376,39 +385,36 @@ module.exports = QuestionBubble;
 
 
 },{}],"/Users/Benjamin/Dropbox/apps/Qs/app/views/components/questions/_QuestionInput.coffee":[function(require,module,exports){
-var QuestionInput, button, div, form, ref, textarea,
-  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  hasProp = {}.hasOwnProperty;
+var QuestionInput, button, div, form, ref, textarea;
 
 ref = React.DOM, div = ref.div, form = ref.form, textarea = ref.textarea, button = ref.button;
 
-QuestionInput = (function(superClass) {
-  extend(QuestionInput, superClass);
-
-  function QuestionInput() {
-    return QuestionInput.__super__.constructor.apply(this, arguments);
-  }
-
-  QuestionInput.prototype.displayName = 'QuestionInput';
-
-  QuestionInput.prototype.getInitialState = function() {
+QuestionInput = React.createClass({
+  displayName: 'QuestionInput',
+  getInitialState: function() {
     return {
-      questionToAsk: ''
+      questionToAsk: '',
+      questionTmpKey: 0
     };
-  };
-
-  QuestionInput.prototype.updateQuestionToAsk = function(ev) {
-    return this.setState({
-      questionToAsk: ev.target.value
+  },
+  updateQuestionToAsk: function(ev) {
+    this.setState({
+      questionTmpKey: this.state.questionTmpKey + 1
     });
-  };
-
-  QuestionInput.prototype.handleSubmit = function(ev) {
+    return this.setState({
+      questionToAsk: {
+        question: ev.target.value,
+        score: 5,
+        key: this.state.questionTmpKey,
+        flagged: 0
+      }
+    });
+  },
+  handleSubmit: function(ev) {
     ev.preventDefault();
-    return console.log("ASK " + this.state.questionToAsk);
-  };
-
-  QuestionInput.prototype.render = function() {
+    return PublishSubscribe.broadcast.call(document, "ask", this.state.questionToAsk);
+  },
+  render: function() {
     return div({
       className: 'question-input'
     }, div({
@@ -423,23 +429,19 @@ QuestionInput = (function(superClass) {
       className: 'form-control',
       onChange: this.updateQuestionToAsk
     }), button({
+      name: 'submit',
       type: 'submit',
       className: 'btn'
     }, 'ASK')))));
-  };
-
-  return QuestionInput;
-
-})(React.Component);
+  }
+});
 
 module.exports = QuestionInput;
 
 
 
 },{}],"/Users/Benjamin/Dropbox/apps/Qs/app/views/components/questions/index.coffee":[function(require,module,exports){
-var QuestionBubble, QuestionIndex, QuestionInput, div,
-  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  hasProp = {}.hasOwnProperty;
+var QuestionBubble, QuestionIndex, QuestionInput, div;
 
 QuestionInput = require('views/components/questions/_QuestionInput.coffee');
 
@@ -447,16 +449,21 @@ QuestionBubble = require('views/components/questions/_QuestionBubble.coffee');
 
 div = React.DOM.div;
 
-QuestionIndex = (function(superClass) {
-  extend(QuestionIndex, superClass);
-
-  function QuestionIndex() {
-    return QuestionIndex.__super__.constructor.apply(this, arguments);
-  }
-
-  QuestionIndex.prototype.displayName = 'QuestionIndex';
-
-  QuestionIndex.prototype.render = function() {
+QuestionIndex = React.createClass({
+  displayName: 'QuestionIndex',
+  componentDidMount: function() {
+    return PublishSubscribe.listen.call(document, "ask", (function(_this) {
+      return function(q) {
+        var newQuestionList;
+        newQuestionList = _this.props.questions;
+        newQuestionList.push(q);
+        return _this.setProps({
+          queetions: newQuestionList
+        });
+      };
+    })(this));
+  },
+  render: function() {
     var question;
     return div({
       id: 'question-index',
@@ -479,11 +486,8 @@ QuestionIndex = (function(superClass) {
     }, div({
       className: 'col-sm-12'
     }, React.createElement(QuestionInput))));
-  };
-
-  return QuestionIndex;
-
-})(React.Component);
+  }
+});
 
 module.exports = QuestionIndex;
 

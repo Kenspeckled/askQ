@@ -1,4 +1,5 @@
-PubSub = {
+PubSub = 
+  
   moduleName: "PubSub"
 
   broadcast: (ev, data) ->
@@ -13,5 +14,5 @@ PubSub = {
     @_callbacks = {} if !@hasOwnProperty('_callbacks')
     (@_callbacks[ev] || @_callbacks[ev] = []).push fn
     return this
-}
+
 module.exports = PubSub

@@ -3,7 +3,17 @@ QuestionIndex = require 'views/components/questions/index.coffee'
 questionController =
 
   index: (req, res) ->
-    props = {}
+    props = questions: [
+      key: 'abc1'
+      question: "What?"
+      score: 112
+      flags: 2
+    ,
+      key: 'abc2'
+      question: "Why?"
+      score: 10
+      flags: 0
+    ]
     try
       element = React.createElement(QuestionIndex, props)
       html = React.renderToString element

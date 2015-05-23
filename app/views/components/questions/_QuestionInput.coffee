@@ -1,18 +1,19 @@
 {div, form, textarea, button} = React.DOM
-
-class QuestionInput extends React.Component
+QuestionInput = React.createClass
 
   displayName: 'QuestionInput'
   
   getInitialState: ->
     questionToAsk: '' 
+    questionTmpKey: 0
 
   updateQuestionToAsk: (ev) ->
-    @setState questionToAsk: ev.target.value
+    @setState questionTmpKey: (@state.questionTmpKey + 1)
+    @setState questionToAsk: question: ev.target.value, score: 5, key: @state.questionTmpKey, flagged: 0 
 
   handleSubmit: (ev) ->
     ev.preventDefault()
-    console.log "ASK " + @state.questionToAsk
+    PublishSubscribe.broadcast.call document, "ask", @state.questionToAsk
 
   render: ->
     div className: 'question-input',
@@ -20,6 +21,6 @@ class QuestionInput extends React.Component
         div className: 'col-xs-12',
           form className: 'form', onSubmit: @handleSubmit, 
             textarea name: 'questionToAsk', className: 'form-control', onChange: @updateQuestionToAsk
-            button type: 'submit', className: 'btn', 'ASK'
+            button name: 'submit', type: 'submit', className: 'btn', 'ASK'
 
 module.exports = QuestionInput

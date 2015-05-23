@@ -15,7 +15,10 @@ LandingPage = React.createClass
     url.join '-'
 
   getInitialState: ->
-    url: @generateRandomUrl()
+    url: null
+
+  componentDidMount: ->
+    @setState url: @generateRandomUrl()
 
   handleUrlChange: (ev) ->
     @setState url: ev.target.value

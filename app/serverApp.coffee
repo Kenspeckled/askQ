@@ -10,6 +10,7 @@ global._utilities = require '../frameworkCore/utilities.coffee'
 global.BaseClass = require '../frameworkCore/Base.coffee'
 global.ObjectOrientedRecord = require '../frameworkCore/ObjectOrientedRecord.coffee'
 global.ActionHandler = require '../frameworkCore/ActionHandler.coffee'
+global.PublishSubscribe = require 'models/modules/pubSub.coffee'
 
 express = require 'express'
 server = express()
