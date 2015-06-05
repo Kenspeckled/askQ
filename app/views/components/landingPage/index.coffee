@@ -34,7 +34,7 @@ LandingPage = React.createClass
           div className: 'row',
             div className: 'col-sm-12',
               h1 className: 'site-title sr-only', 'Qs'
-              img className: 'logo', src: '/img/askQ_logo.png', alt: 'AskQ'
+              img className: 'logo', src: '/assets/images/askQ_logo.png', alt: 'AskQ'
       div className: 'main',
         div className: 'container',
           div className: 'row',
