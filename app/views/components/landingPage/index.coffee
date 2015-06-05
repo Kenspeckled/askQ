@@ -1,3 +1,4 @@
+Header = require 'views/components/header/_Header.coffee'
 {div, header, h1, img, form, input, button} = React.DOM
 
 LandingPage = React.createClass 
@@ -29,12 +30,7 @@ LandingPage = React.createClass
 
   render: ->
     div id: 'landing-page',
-      header className: 'header',
-        div className: 'container',
-          div className: 'row',
-            div className: 'col-sm-12',
-              h1 className: 'site-title sr-only', 'Qs'
-              img className: 'logo', src: '/assets/images/askQ_logo.png', alt: 'AskQ'
+      React.createElement(Header, @props)
       div className: 'main',
         div className: 'container',
           div className: 'row',
