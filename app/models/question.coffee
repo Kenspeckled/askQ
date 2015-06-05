@@ -1,18 +1,21 @@
-class Session extends BaseClass
+class Question extends BaseClass
   # @addQuestionPath = '/api/add-question'
   # @votePath = '/api/vote'
   # @flagPath = '/api/flag'
   # @indexPath = '/api/all-questions'
   @attributes =
-    url:
+    text:
       dataType: 'string'
-      identifiable: true
       validates:
         presence: true
         uniqueness: true
-    questions:
+    session:
       dataType: 'association'
-      many: true
+      many: false
       # preloadModel: Question
+    votes:
+      dataType: 'integer'
+    flags:
+      dataType: 'integer'
 
-module.exports = Session
+module.exports = Question
