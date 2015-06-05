@@ -24,7 +24,6 @@ questionController =
     url = req.path.replace('/', '')
     questionBoardPropsPromise = new Promise (resolve) ->
       QuestionBoard.findBy(url: url).then (questionBoardProps) ->
-        console.log questionBoardProps
         if questionBoardProps
           resolve questionBoardProps
         else

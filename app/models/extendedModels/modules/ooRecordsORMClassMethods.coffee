@@ -389,6 +389,7 @@ OORecordsORM =
 
 
   findBy: (option) ->
+    console.log option
     p = new Promise (resolve, reject) =>
       optionName = Object.keys(option)[0]
       condition = option[optionName]

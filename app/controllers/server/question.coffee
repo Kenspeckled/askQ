@@ -9,11 +9,10 @@ notFound = (res) ->
 questionController =
 
   showAPI: (req, res) ->
-    console.log "showAPI"
     onSuccess = (questionObject) ->
       res.json questionObject#.toJSON()
-    url = req.path.replace('/', '')
-    QuestionBoard.findBy(url: url).then(onSuccess, notFound.bind(this, res))
+    args = req.query
+    QuestionBoard.findBy(args).then(onSuccess, notFound.bind(this, res))
 
   index: (req, res) ->
     url = req.path.replace('/', '')
