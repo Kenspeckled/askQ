@@ -3,12 +3,14 @@
 process.env.NODE_PATH =  __dirname+':'+__dirname + '/controllers/server'
 require('module').Module._initPaths()
 require 'globals.coffee'
+bodyParser = require 'body-parser'
 
 global._scriptContext = 'server' # needed for routing
 express = require 'express'
 server = express()
 
 server.use express.static('public')
+server.use bodyParser.urlencoded(extended: true)
 server.set('views', __dirname + '/views')
 server.set('view engine', 'jade')
 
