@@ -6,14 +6,12 @@ class QuestionBubble extends React.Component
 
   render: ->
     div className: 'question-bubble',
-      div className: 'row',
-        div className: 'col-xs-12',
-          div className: 'row',
-            div className: 'col-xs-10',
-              div null, @props.question
-            div className: 'col-xs-2',
-              div className: 'up-vote'
-              div null, @props.score
-              div className: 'down-vote'
+      div className: 'question-container',
+        div className: 'question',
+          div null, @props.question
+        div className: 'actions',
+          div className: 'up-vote'
+          div className: 'score', @props.score
+          div className: 'down-vote'
 
 module.exports = QuestionBubble

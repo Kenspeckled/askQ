@@ -1,11 +1,52 @@
 .question-bubble
-  background-color: #e0e0e0
-  padding: 20px
-  margin-top: 5px
-  margin-bottom: 5px
+  +border-radius(18px)
+  background-color: $white 
+  position: relative
+  padding: 30px
+  font-size: 16px
+  margin: 20px 5px 20px 10px
+  z-index: 10
+  &:before
+    content: ""
+    position: absolute
+    z-index: -1
+    bottom: 3px 
+    left: -20px
+    height: 50px
+    background: $white 
+    border-right: 60px solid $white
+    -webkit-border-bottom-right-radius: 50px 40px
+    -moz-border-radius-bottomright: 50px 40px
+    border-bottom-right-radius: 50px 40px
+    +transform(translate(0, -2px))
+  &:after
+    content: ""
+    position: absolute
+    z-index: -1
+    bottom: 3px 
+    left: 10px
+    width: 20px
+    height: 50px
+    background: $bg
+    -webkit-border-bottom-right-radius: 45px 55px
+    -moz-border-radius-bottomright: 45px 55px
+    border-bottom-right-radius: 45px 55px
+    +transform(translate(-30px, -2px))
+
+  .question-container
+    @extend .clearfix
+  .question
+    width: 88%
+    float: left
+  .actions
+    @extend .clearfix
+    width: 12%
+    float: right
+    text-align: center
 
   .up-vote,
   .down-vote
+    display: inline-block
     width: 0
     height: 0
     cursor: pointer
@@ -13,10 +54,23 @@
   .up-vote
     border-left: 20px solid transparent
     border-right: 20px solid transparent
-    border-bottom: 20px solid #f00
+    border-bottom: 20px solid $light-grey
+    &:hover
+      border-bottom-color: $green
+    &:active
+      border-bottom-color: $light-green
+
+  .score
+    margin: 25px 0 28px 0
+    font-size: 18px
+    color: $grey
 
   .down-vote
     border-left: 20px solid transparent
     border-right: 20px solid transparent
-    border-top: 20px solid #f00
+    border-top: 20px solid $light-grey 
+    &:hover
+      border-top-color: $red
+    &:active
+      border-top-color: $light-red
 

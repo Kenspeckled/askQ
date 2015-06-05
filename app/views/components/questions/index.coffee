@@ -16,9 +16,9 @@ QuestionIndex = React.createClass
   render: ->
     div id: 'question-index', className: 'container',
       div className: 'row',
-        div className: 'col-sm-12',
-          if @props.questions
-            for question in @props.questions
+        if @props.questions
+          for question in @props.questions
+            div className: 'col-sm-12 col-md-6',
               React.createElement QuestionBubble, question
       div className: 'row',
         div className: 'col-sm-12',
