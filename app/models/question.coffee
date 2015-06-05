@@ -4,12 +4,12 @@ class Question extends BaseClass
   # @flagPath = '/api/flag'
   # @indexPath = '/api/all-questions'
   @attributes =
-    text:
+    question:
       dataType: 'string'
       validates:
         presence: true
         uniqueness: true
-    session:
+    questionBoard:
       dataType: 'association'
       many: false
       # preloadModel: Question
