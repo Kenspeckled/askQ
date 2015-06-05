@@ -1,6 +1,6 @@
 {div, form, textarea, button} = React.DOM
 
-class QuestionInput extends React.Component
+QuestionInput = React.createClass
 
   displayName: 'QuestionInput'
   

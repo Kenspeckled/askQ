@@ -3,7 +3,7 @@ QuestionBubble = require 'views/components/questions/_QuestionBubble.coffee'
 
 {div} = React.DOM
 
-class QuestionIndex extends React.Component
+QuestionIndex = React.createClass
 
   displayName: 'QuestionIndex'
 
