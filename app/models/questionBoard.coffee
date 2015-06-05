@@ -1,4 +1,6 @@
-class Session extends BaseClass
+Question = require 'models/question.coffee'
+
+class QuestionBoard extends BaseClass
   # @addQuestionPath = '/api/add-question'
   # @votePath = '/api/vote'
   # @flagPath = '/api/flag'
@@ -13,6 +15,6 @@ class Session extends BaseClass
     questions:
       dataType: 'association'
       many: true
-      # preloadModel: Question
+      preloadModel: Question
 
-module.exports = Session
+module.exports = QuestionBoard
