@@ -1,37 +1,32 @@
-clearDataCacheAfterEventLoop = ->
-  self = this
-  process.nextTick ->
-    self.dataCache = {}
 
 class DataCache
   constructor: (obj) ->
-    @dataCache = {}
+    @data = {}
     @setObject(obj) if obj
 
   setObject: (obj) ->
     for k in Object.keys(obj)
-      @dataCache[k] = obj[k]
-
-  # set: (key, value) -> #Don't think this is needed
-  #   @dataCache[key] = value
-  #   value
+      @data[k] = obj[k]
 
   get: (key) ->
-    if @dataCache.hasOwnProperty(key)
-      return @dataCache[key]
+    if @data.hasOwnProperty(key)
+      return @data[key]
     else
       return false
 
-  setCacheFromContext: (context) ->
-    if context.dataCache
-      @dataCache = context.dataCache
+  clear: ->
+    process.nextTick => 
+      @data = {}
 
-  assignToContext: (context) ->
-    context.dataCache = {}
-    if @dataCache
-      for k in Object.keys(@dataCache)
-        context.dataCache[k] = @dataCache[k]
-    clearDataCacheAfterEventLoop.call(this)
+  pluckProperties: (properties) ->
+    returnObj = {}
+    for propKey in properties
+      if @data.hasOwnProperty(propKey)
+        returnObj[propKey] = @data[propKey]
+      else
+        return false
+    returnObj
+
 
 
 module.exports = DataCache
