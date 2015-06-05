@@ -1,6 +1,6 @@
 Promise = require 'promise'
-QuestionBoard = require 'models/extendedModels/questionBoard'
-Question = require 'models/extendedModels/question'
+QuestionBoard = require 'models/extendedModels/questionBoard.coffee'
+Question = require 'models/extendedModels/question.coffee'
 QuestionIndex = require 'views/components/questions/index.coffee'
 
 questionController =
