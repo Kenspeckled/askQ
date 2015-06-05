@@ -1,0 +1,51 @@
+@import mixins
+
+.clearfix
+  &:before,
+  &:after
+    content: " "
+    display: table
+  &:after
+    clear: both
+
+.hidden
+  display: none !important
+  visibility: hidden !important
+
+.pull-right 
+  float: right !important
+
+.pull-left 
+  float: left !important
+
+.text-center
+  text-align: center !important
+.text-left
+  text-align: left !important
+.text-right
+  text-align: right !important
+
+.invisible
+  +opacity(0)
+
+.capitalize
+  text-transform: capitalize
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak
+  display: none !important
+
+.sr-only
+  position: absolute
+  left: 0px
+  top: 0px
+  width: 0px
+  height: 0px
+  visibility: hidden
+
+.noselect
+  -webkit-touch-callout: none
+  -webkit-user-select: none
+  -khtml-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  user-select: none

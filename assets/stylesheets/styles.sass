@@ -1,5 +1,15 @@
-@import './components/landingPage/index.sass'
-@import './components/questions/index.sass'
+@import imports/mixins
+@import imports/variables
 
-body
-  background-color: #EFEFEF
+@import imports/normalize
+@import imports/fonts
+@import imports/typography
+@import imports/global
+// bootstrp grid depends on box-sizing="border-box" in impots/global
+@import imports/bootstrap_grid
+@import imports/helpers
+
+@import shared/base
+
+@import components/landingPage/index
+@import components/questions/index
