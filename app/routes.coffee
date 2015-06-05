@@ -13,7 +13,8 @@ routes = (router) ->
 
   else if _scriptContext == 'server'
     console.log "pop"
-    # router.post '/api/add-question', sessionController.addQuestion
+    # router.get '/api/question/index.json', questionController.indexAPI
+    router.get '/api/question/show.json', questionController.showAPI
     # router.post '/api/vote', sessionController.vote
     # router.post '/api/flag', sessionController.flag
     # router.get '/api/all-questions', sessionController.indexJSON

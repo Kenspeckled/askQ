@@ -1,4 +1,5 @@
 QuestionIndex = require 'views/components/questions/index.coffee'
+QuestionBoard = require 'models/questionBoard.coffee'
 
 questionController =
 
@@ -23,6 +24,7 @@ questionController =
     url = req.path.replace('/', '')
     questionBoardPropsPromise = new Promise (resolve) ->
       QuestionBoard.findBy(url: url).then (questionBoardProps) ->
+        console.log questionBoardProps
         if questionBoardProps
           resolve questionBoardProps
         else

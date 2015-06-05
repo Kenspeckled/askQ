@@ -16,6 +16,7 @@ httpRequest = (method, url, args, isJson) ->
     client.send()
 
     client.onload = ->
+      console.log @status
       if @status == 200
         if isJson
           resolve JSON.parse(@response)
