@@ -41,18 +41,7 @@ createObject = (newObjectProps) ->
   obj.createdAt = idToCreatedAtDate(newObjectProps.id) if newObjectProps.id
   for key, value of newObjectProps
     if @attributes[key]
-      switch @attributes[key].dataType
-        when 'integer'
-          obj[key] = +value
-        when 'association'
-          if @attributes[key].many
-            value = value.split(',') if _.isString(value)
-          obj[key] = value
-        when 'boolean'
-          obj[key] = true if _.includes([true, 'true'], value)
-          obj[key] = false if _.includes([false, 'false'], value)
-        else
-          obj[key] = value
+      obj[key] = value
     else
       #FIXME: Should attributes be able to be assigned if not defined?
       obj[key] = value
@@ -232,7 +221,7 @@ writeAttributes = (props) ->
           if _.includes([true, 'true', false, 'false'], value)
             multi.zadd self.name + "#" + attr + ":" + value, 1, props.id #set
         when 'association'
-          if obj.many == true
+          if obj.many
             multipleValues = value.split(",")
             multi.sadd self.name + "#" + attr + ":" +  props.id, multipleValues...
         else
@@ -358,6 +347,9 @@ OORecordsORM =
               switch @attributes[propertyName].dataType
                 when 'integer'
                   props[propertyName] = parseInt(propertyValue)
+                when 'boolean'
+                  props[propertyName] = true if _.includes([true, 'true'], propertyValue)
+                  props[propertyName] = false if _.includes([false, 'false'], propertyValue)
                 when 'association'
                   propertyValue = propertyValue.split ','
                   props[propertyName] = propertyValue
@@ -389,7 +381,6 @@ OORecordsORM =
 
 
   findBy: (option) ->
-    console.log option
     p = new Promise (resolve, reject) =>
       optionName = Object.keys(option)[0]
       condition = option[optionName]
@@ -405,6 +396,32 @@ OORecordsORM =
     p.then (res) =>
       @find(res)
 
+  # args1 =
+  #   price:
+  #     greaterThan: 5
+  #   includes:
+  #     keywords: 'salt'
+  #     in: 'name'
+  #   sortBy: 'name'
+  #   sortDirection: 'asc'
+  #   limit: 20
+  #   offset: 20
+
+  # args2 =
+  #   inStock: true
+  #   price:
+  #     lessThanOrEqualTo: 100
+  #   sortBy: 'price'
+
+  # args3 =
+  #   includes:
+  #     keywords: 'salt'
+  #     in: ['name', 'description']
+  #     modifiedWeights: [
+  #       attribute: 'description'
+  #       weight: 0.5
+  #     ]
+  #   sortBy: 'relevance'
   where: (args) ->
     self = this
     args ||= {}
@@ -489,27 +506,16 @@ OORecordsORM =
         intersectKey = 'temporaryIntersectSet:'+_utilities.randomString(5)
         sortedSetKeyNames = _.map(sortedSetKeys, 'name')
         self.client.zinterstore intersectKey, sortedSetKeys.length, sortedSetKeyNames..., (err,numberOfResults) ->
-          self.client.expire intersectKey, 1 # FIXME: this shoud be cached
+          self.client.expire intersectKey, 1 #Sets the key to expire in 1 second incase there is an error before it is deleted.
           resolve({intersectKey,numberOfResults})
-      matchedIdsPromise = idsKeyPromise.then (resultObj) ->
-        idKey = resultObj.intersectKey
-        totalResults = resultObj.numberOfResults
-        facetResults = {}
-        facetsPromises = []
-        _.each args.facets, (f) ->
-          facetResults[f] = []
-          facetsPromises.push new Promise (resolve) ->
-            self.client.sort idKey, 'by', 'nosort', 'get', self.name+':*->'+f, (err, facetList) ->
-              counts = _.countBy facetList, (p) -> p
-              for x in Object.keys(counts)
-                facetResults[f].push item: x, count: counts[x]
-              resolve()
-        Promise.all(facetsPromises).then ->
-          new Promise (resolve) ->
-            self.client.zrevrange idKey, start, end, (error, ids) ->
-              ids.reverse() if args.sortDirection == 'desc'
-              self.client.del idKey, ->
-              resolve {ids, totalResults, facetResults}
+      matchedIdsPromise = idsKeyPromise.then (matchedIds) ->
+        idKey = matchedIds.intersectKey
+        totalResults = matchedIds.numberOfResults
+        new Promise (resolve) ->
+          self.client.zrevrange idKey, start, end, (error, ids) ->
+            ids.reverse() if args.sortDirection == 'desc'
+            self.client.del idKey, ->
+            resolve {ids, totalResults}
       matchedIdsPromise.then (resultObject) ->
         ids = resultObject.ids
         if args.sortBy == 'rand'
@@ -524,13 +530,12 @@ OORecordsORM =
             name: self.name
             total: resultObject.totalResults
             offset: start
-            facets: resultObject.facetResults
             items: resultItems
 
   create: (props, skipValidation) ->
     new Promise (resolve, reject) =>
       sendAttributesForSaving.apply(this, [props, skipValidation]).then (writtenObject) =>
-        resolve createObject.apply(this, [writtenObject]) if writtenObject
+        resolve @find(writtenObject.id) if writtenObject
       , (error) ->
         reject error if error
 
@@ -574,14 +579,17 @@ OORecordsORM =
               if obj.identifiable
                 multi.del @name + "#" + attr + ":" + originalValue
             when 'association'
-              if obj.many == true and remove == true
-                multi.srem @name + "#" + attr + ":" + id, removeValue...
+              if obj.many == true 
+                if remove == true
+                  multi.srem @name + "#" + attr + ":" + id, removeValue...
+                else
+                  updateFieldsDiff[attr] = _.union(originalValue, newValue)
             when 'boolean'
               multi.zrem @name + "#" + attr + ":" + originalValue, id
       multiPromise = new Promise (resolve, reject) =>
         multi.exec =>
           sendAttributesForSaving.apply(this, [updateFieldsDiff, skipValidation]).then (writtenObj) =>
-            resolve createObject.apply(this, [writtenObj])
+            resolve @find(writtenObj.id)
           , (error) ->
             reject error
       multiPromise.then (obj) ->
