@@ -4,7 +4,6 @@ process.env.NODE_PATH =  __dirname+':'+__dirname + '/controllers/server'
 require('module').Module._initPaths()
 require 'globals.coffee'
 
-
 global._scriptContext = 'server' # needed for routing
 express = require 'express'
 server = express()

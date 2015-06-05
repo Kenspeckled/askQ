@@ -6,13 +6,15 @@ QuestionInput = React.createClass
   
   getInitialState: ->
     questionToAsk: '' 
+    questionTmpKey: 0
 
   updateQuestionToAsk: (ev) ->
-    @setState questionToAsk: ev.target.value
+    @setState questionTmpKey: @state.questionTmpKey++
+    @setState questionToAsk: question: ev.target.value, score: 5, questionTmpKey: @state.questionTmpKey, flagged: 0 
 
   handleSubmit: (ev) ->
     ev.preventDefault()
-    console.log "ASK " + @state.questionToAsk
+    PublishSubscribe.broadcast.call document, "ask", @state.questionToAsk
 
   render: ->
     div className: 'question-input',
@@ -20,6 +22,6 @@ QuestionInput = React.createClass
         div className: 'col-xs-12',
           form className: 'form', onSubmit: @handleSubmit, 
             textarea name: 'questionToAsk', className: 'form-control', onChange: @updateQuestionToAsk
-            button type: 'submit', className: 'btn', 'ASK'
+            button name: 'submit', type: 'submit', className: 'btn', 'ASK'
 
 module.exports = QuestionInput

@@ -3,9 +3,15 @@ QuestionBubble = require 'views/components/questions/_QuestionBubble.coffee'
 
 {div} = React.DOM
 
-QuestionIndex = React.createClass
+QuestionIndex = React.createClass  
 
   displayName: 'QuestionIndex'
+  
+  componentDidMount: ->
+    PublishSubscribe.listen.call document, "ask", (q) =>
+      newQuestionList = @props.questions
+      newQuestionList.push q 
+      @setProps queetions: newQuestionList
 
   render: ->
     div id: 'question-index', className: 'container',
@@ -16,6 +22,5 @@ QuestionIndex = React.createClass
       div className: 'row',
         div className: 'col-sm-12',
           React.createElement QuestionInput
-          
 
 module.exports = QuestionIndex
