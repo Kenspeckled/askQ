@@ -3,37 +3,25 @@ QuestionBoard = require 'models/questionBoard.coffee'
 
 questionController =
 
-  # index: (ctx) ->
-  #   props = questions: [
-  #     key: 'abc1'
-  #     question: "What?"
-  #     score: 112
-  #     flags: 2
-  #   ,
-  #     key: 'abc2'
-  #     question: "Why?"
-  #     score: 10
-  #     flags: 0
-  #   ]
-  #   React.render(
-  #     React.createElement(QuestionIndex, props),
-  #     document.getElementById('content')
-  #   )
-
   index: (req) ->
-    url = req.path.replace('/', '')
+    console.log "Question Index controller called"
+    url = req.path.replace(/\//, '').replace(/\?.*/, '')
     questionBoardPropsPromise = new Promise (resolve) ->
-      QuestionBoard.findBy(url: url).then (questionBoardProps) ->
-        if questionBoardProps
-          resolve questionBoardProps
+      QuestionBoard.findBy({url}).then (questionBoard) ->
+        if questionBoard
+          resolve questionBoard
         else
-          QuestionBoard.create({url, questions:''}).then (questionBoardProps) ->
-            resolve questionBoardProps
-    questionBoardPropsPromise.then (questionBoardProps) ->
-      React.render(
-        React.createElement(QuestionIndex, questionBoardProps)
-        document.getElementById('content')
-      )
+          QuestionBoard.create({url}).then (newQuestionBoard) ->
+            resolve newQuestionBoard
+    questionBoardPropsPromise.then (questionBoard) ->
+      props = questions: questionBoard.questions
+      try
+        React.render(
+          React.createElement(QuestionIndex, props)
+          document.getElementById('content')
+        )
+      catch error
+        console.log new Error(error) if process.env.SHOW_QS_ERRORS
 
 
 module.exports = questionController

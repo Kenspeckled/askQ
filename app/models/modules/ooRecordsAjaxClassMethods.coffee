@@ -6,12 +6,8 @@ httpRequest = (method, url, args, isJson) ->
     uri = url
     if args
       uri += '?'
-      argcount = 0
-      for key of args
-        if args.hasOwnProperty(key)
-          if argcount++
-            uri += '&'
-          uri += encodeURIComponent(key) + '=' + encodeURIComponent(args[key])
+      uri += _utilities.objectToQueryString args
+    console.log "Ajax request to " + uri
     client.open method, uri
     client.send()
 
@@ -34,13 +30,13 @@ else
 
 ajax =
   get: (path, args) ->
-    httpRequest 'GET', url + '/' + path, args, true
+    httpRequest 'GET',  path, args, true
   post: (path, args) ->
-    httpRequest 'POST', url + '/' + path, args
+    httpRequest 'POST', path, args
   put: (path, args) ->
-    httpRequest 'PUT', url + '/' + path, args
+    httpRequest 'PUT',  path, args
   delete: (path, args) ->
-    httpRequest 'DELETE', url + '/' + path, args
+    httpRequest 'DELETE', path, args
 
 AJAXClassMethods =
 
@@ -58,22 +54,10 @@ AJAXClassMethods =
   where: (opts) ->
     ajax.get @indexPath, opts
 
-  addQuestion: (opts) ->
-    ajax.post @addQuestionPath, opts
+  create: (opts) ->
+    ajax.post @createPath, opts
 
-  vote: (opts) ->
-    ajax.post @votePath, opts
-
-  flag: (opts) ->
-    ajax.post @flagPath, opts
-
-  index: (opts) ->
-    ajax.get @indexPath, opts
-
-  #create: (opts) ->
-  #  ajax.post @createURL, opts
-
-  #update: (id, opts) ->
-  #  ajax.put @updateURL, opts
+  update: (id, opts) ->
+    ajax.put @updatePath, opts
 
 module.exports = AJAXClassMethods

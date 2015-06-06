@@ -10,7 +10,7 @@ QuestionIndex = React.createClass
 
   componentDidMount: ->
     PublishSubscribe.listen.call document, "ask", (q) =>
-      newQuestionList = _.clone(@props.questions) || [] 
+      newQuestionList = _.union(@props.questions)
       newQuestionList.push q
       @setProps questions: newQuestionList
 

@@ -8,22 +8,37 @@ notFound = (res) ->
 
 questionController =
 
+  apiIndex: (req, res) ->
+    onSuccess = (questionObject) ->
+      res.json questionObject#.toJSON()
+    url = req.query.url
+    QuestionBoard.findBy(url: url).then(onSuccess, notFound.bind(this, res))
+
   apiShow: (req, res) ->
     onSuccess = (questionObject) ->
       res.json questionObject#.toJSON()
-    args = req.query
-    QuestionBoard.findBy(args).then(onSuccess, notFound.bind(this, res))
+    id = req.params.id
+    Question.find(id).then(onSuccess, notFound.bind(this, res))
 
   apiCreate: (req, res) ->
     try
       QuestionBoard.findBy(url: req.body.questionBoardUrl).then (questionBoard) ->
-        Question.create({question: req.body.question}, questionBoard:questionBoard.id).then (question) ->
+        Question.create({question: req.body.question}, questionBoard: questionBoard.id).then (question) ->
           QuestionBoard.update(questionBoard.id, questions: [question.id], true).then ->
             res.status(200)
             res.send true
     catch error
       res.status(500)
-      res.send if process.env.SHOW_QS_ERRORS then error else false
+      res.send (if process.env.SHOW_QS_ERRORS then error else false)
+
+  apiCreateBoard: (req, res) ->
+    QuestionBoard.create({url: req.query.url}).then (questionBoard) ->
+      res.status(200)
+      res.json questionBoard 
+    , (errors) ->
+      errorMessage = _.map(errors, 'message').join ' '
+      res.status(500)
+      res.send (if process.env.SHOW_QS_ERRORS then errorMessage else false)
 
   # apiVote: (req, res) ->
   #   questionNumber = req.body.questionNumber
@@ -37,7 +52,7 @@ questionController =
   index: (req, res) ->
     url = req.params.url
     questionBoardPropsPromise = new Promise (resolve) ->
-      QuestionBoard.findBy(url: url).then (questionBoard) ->
+      QuestionBoard.findBy({url}).then (questionBoard) ->
         if questionBoard
           resolve questionBoard
         else
@@ -45,7 +60,6 @@ questionController =
             resolve newQuestionBoard
     questionBoardPropsPromise.then (questionBoard) ->
       props = questionBoard
-      console.log props
       try
         element = React.createElement(QuestionIndex, props)
         html = React.renderToString element

@@ -1,9 +1,7 @@
 class Question extends BaseClass
-  # @addQuestionPath = '/api/add-question'
-  # @votePath = '/api/vote'
-  # @flagPath = '/api/flag'
-  # @indexPath = '/api/question/index.json'
-  # @showPath = '/api/question/show.json'
+  @showPath = 'api/question/'+@id
+  @createPath = 'api/question/new'
+  @updatePath = 'api/question/'+@id+'/update'
   @attributes =
     question:
       dataType: 'string'

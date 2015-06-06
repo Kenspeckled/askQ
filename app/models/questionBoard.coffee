@@ -1,11 +1,8 @@
 Question = require 'models/question.coffee'
 
 class QuestionBoard extends ObjectOrientedRecord
-  # @addQuestionPath = 'api/add-question'
-  # @votePath = 'api/vote'
-  # @flagPath = 'api/flag'
-  # @indexPath = 'api/all-questions'
-  @showPath = 'api/question/show.json'
+  @showPath = 'api/question/index'
+  @createPath = 'api/question-board/new'
   @attributes =
     url:
       dataType: 'string'

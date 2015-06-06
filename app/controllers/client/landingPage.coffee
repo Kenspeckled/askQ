@@ -4,9 +4,12 @@ landingPageController =
 
   index: (ctx) ->
     props = {}
-    React.render(
-      React.createElement(LandingPage, props),
-      document.getElementById('content')
-    )
+    try
+      React.render(
+        React.createElement(LandingPage, props),
+        document.getElementById('content')
+      )
+    catch error
+      console.log new Error(error) if process.env.SHOW_QS_ERRORS
 
 module.exports = landingPageController

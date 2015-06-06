@@ -80,7 +80,7 @@ validate = (validationObj, attrName, attrValue) ->
           validations.push new ValidationError attrName + " must not be one of the forbidden values", attribute: attrName, actual: attrValue, expected: validationSetting
       when 'uniqueness'
         validationPromise = new Promise (resolve, reject) =>
-          @client.get @name + ':' + attrName + ':' + attrValue, (error, obj) ->
+          @client.get @name + '#' + attrName + ':' + attrValue, (error, obj) ->
             if (error || obj)
               resolve new ValidationError attrName + " should be a unique value", attribute: attrName, actual: attrValue, expected: validationSetting
             else
@@ -352,28 +352,32 @@ OORecordsORM =
                   props[propertyName] = false if _.includes([false, 'false'], propertyValue)
                 when 'association'
                   propertyValue = propertyValue.split ','
-                  props[propertyName] = propertyValue
-                  if @attributes[propertyName].preloadModel
-                    _.each propertyValue, (v) =>
-                      associationPromise = new Promise (res) =>
-                        Model = @attributes[propertyName].preloadModel
-                        Model.find(v).done (foundObj) ->
-                          res foundObj
-                      findAssociationPromiseObjects.push propertyName: propertyName, promise: associationPromise, many: @attributes[propertyName].many
                   if @attributes[propertyName].many
                     props[propertyName] = propertyValue
                   else
                     props[propertyName] = propertyValue[0]
+                  if @attributes[propertyName].preloadModel
+                    _.each propertyValue, (v) =>
+                      associationPromise = new Promise (res) =>
+                        Model = @attributes[propertyName].preloadModel
+                        Model.find(v).then (foundObj) ->
+                          res foundObj
+                      findAssociationPromiseObjects.push propertyName: propertyName, promise: associationPromise, many: @attributes[propertyName].many
           obj = createObject.apply(this, [props])
           resolve obj
         else
           resolve false
     foundPromise.then (foundObj) ->
       return foundObj if _.isEmpty(findAssociationPromiseObjects)
+      _.each findAssociationPromiseObjects, (associationPromiseObj) ->
+        if associationPromiseObj.many
+          foundObj[associationPromiseObj.propertyName] = []
+        else
+          foundObj[associationPromiseObj.propertyName] = null
       assignAssociationsPromises = _.map findAssociationPromiseObjects, (associationPromiseObj) ->
         associationPromiseObj.promise.then (associationObj) ->
           if associationPromiseObj.many
-            foundObj[associationPromiseObj.propertyName].push associationObj
+            foundObj[associationPromiseObj.propertyName].push associationObj if associationObj
           else
             foundObj[associationPromiseObj.propertyName] = associationObj
       Promise.all(assignAssociationsPromises).then ->
@@ -583,7 +587,10 @@ OORecordsORM =
                 if remove == true
                   multi.srem @name + "#" + attr + ":" + id, removeValue...
                 else
-                  updateFieldsDiff[attr] = _.union(originalValue, newValue)
+                  originalIds = _.map(originalValue, 'id')
+                  newValue = _.union(originalIds, newValue)
+                  unless _.isEqual(newValue, originalValue) 
+                    updateFieldsDiff[attr] = newValue 
             when 'boolean'
               multi.zrem @name + "#" + attr + ":" + originalValue, id
       multiPromise = new Promise (resolve, reject) =>

@@ -1,4 +1,4 @@
-{header, div, h1, img} = React.DOM
+{header, div, a, h1, img} = React.DOM
 
 Header = React.createClass 
 
@@ -9,7 +9,8 @@ Header = React.createClass
       div className: 'container',
         div className: 'row',
           div className: 'col-sm-12',
-            h1 className: 'site-title sr-only', 'Qs'
-            img className: 'logo', src: '/assets/images/askQ_logo.png', alt: 'AskQ'
+            a href: '/',
+              h1 className: 'site-title sr-only', 'Qs'
+              img className: 'logo', src: '/assets/images/askQ_logo.png', alt: 'AskQ'
 
 module.exports = Header

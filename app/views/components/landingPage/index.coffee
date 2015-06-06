@@ -1,5 +1,5 @@
 Header = require 'views/components/header/_Header.coffee'
-{div, header, h1, img, form, input, button} = React.DOM
+{div, header, h1, img, form, input, a} = React.DOM
 
 LandingPage = React.createClass 
 
@@ -24,10 +24,6 @@ LandingPage = React.createClass
   handleUrlChange: (ev) ->
     @setState url: ev.target.value
 
-  handleSubmit: (ev) ->
-    ev.preventDefault()
-    window.location = @state.url
-
   render: ->
     div id: 'landing-page',
       React.createElement(Header, @props)
@@ -37,7 +33,7 @@ LandingPage = React.createClass
             div className: 'col-sm-12',
               form onSubmit: @handleSubmit,
                 input type: 'text', name: 'new-session', onChange: @handleUrlChange, value: @state.url
-                button type: 'submit', name: 'new-session', 'Create URL'
+                a className: 'btn', href: '/'+@state.url, 'Join Question Board'
 
 
 module.exports = LandingPage
