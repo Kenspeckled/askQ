@@ -1,3 +1,4 @@
+Question = require 'models/question.coffee'
 Header = require 'views/components/header/_Header.coffee'
 QuestionInput = require 'views/components/questions/_QuestionInput.coffee'
 QuestionBubble = require 'views/components/questions/_QuestionBubble.coffee'
@@ -9,10 +10,10 @@ QuestionIndex = React.createClass
   displayName: 'QuestionIndex'
 
   componentDidMount: ->
-    PublishSubscribe.listen.call document, "ask", (q) =>
-      newQuestionList = _.union(@props.questions)
-      newQuestionList.push q
-      @setProps questions: newQuestionList
+    #newQuestionList = _.union(@props.questions, fetchedQuestionList)
+    #@setProps questions: newQuestionList
+    PublishSubscribe.listen.call document, "ask", (newQuestion) =>
+      Question.create(question: newQuestion, questionBoard: @props.questionBoardId)
 
   render: ->
     div id: 'question-index',

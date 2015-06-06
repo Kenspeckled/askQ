@@ -1,4 +1,4 @@
-class Question extends BaseClass
+class Question extends ObjectOrientedRecord
   @showPath = 'api/question/'+@id
   @createPath = 'api/question/new'
   @updatePath = 'api/question/'+@id+'/update'

@@ -4,7 +4,6 @@ QuestionBoard = require 'models/questionBoard.coffee'
 questionController =
 
   index: (req) ->
-    console.log "Question Index controller called"
     url = req.path.replace(/\//, '').replace(/\?.*/, '')
     questionBoardPropsPromise = new Promise (resolve) ->
       QuestionBoard.findBy({url}).then (questionBoard) ->
@@ -14,7 +13,7 @@ questionController =
           QuestionBoard.create({url}).then (newQuestionBoard) ->
             resolve newQuestionBoard
     questionBoardPropsPromise.then (questionBoard) ->
-      props = questions: questionBoard.questions
+      props = questions: questionBoard.questions, questionBoardId: questionBoard.id
       try
         React.render(
           React.createElement(QuestionIndex, props)

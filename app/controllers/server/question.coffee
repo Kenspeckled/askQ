@@ -22,17 +22,16 @@ questionController =
 
   apiCreate: (req, res) ->
     try
-      QuestionBoard.findBy(url: req.body.questionBoardUrl).then (questionBoard) ->
-        Question.create({question: req.body.question}, questionBoard: questionBoard.id).then (question) ->
-          QuestionBoard.update(questionBoard.id, questions: [question.id], true).then ->
-            res.status(200)
-            res.send true
+      Question.create(question: req.body.question.question, questionBoard: req.body.questionBoard).then (question) ->
+        QuestionBoard.update(req.body.questionBoard, questions: [question.id], true).done ->
+          res.status(200)
+          res.send true
     catch error
       res.status(500)
       res.send (if process.env.SHOW_QS_ERRORS then error else false)
 
   apiCreateBoard: (req, res) ->
-    QuestionBoard.create({url: req.query.url}).then (questionBoard) ->
+    QuestionBoard.create({url: req.body.url}).then (questionBoard) ->
       res.status(200)
       res.json questionBoard 
     , (errors) ->
@@ -59,7 +58,7 @@ questionController =
           QuestionBoard.create({url}).then (newQuestionBoard) ->
             resolve newQuestionBoard
     questionBoardPropsPromise.then (questionBoard) ->
-      props = questionBoard
+      props = questions: questionBoard.questions, questionBoardId: questionBoard.id
       try
         element = React.createElement(QuestionIndex, props)
         html = React.renderToString element
