@@ -23,7 +23,8 @@ questionController =
   apiCreate: (req, res) ->
     try
       Question.create(question: req.body.question.question, questionBoard: req.body.questionBoard).then (question) ->
-        QuestionBoard.update(req.body.questionBoard, questions: [question.id], true).done ->
+        QuestionBoard.update(req.body.questionBoard, questions: [question.id], true).done (questionBoard) ->
+          req.io.of('/'+questionBoard.url).emit 'questionAdded', question
           res.status(200)
           res.send true
     catch error

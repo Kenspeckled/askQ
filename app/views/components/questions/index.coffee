@@ -2,6 +2,7 @@ Question = require 'models/question.coffee'
 Header = require 'views/components/header/_Header.coffee'
 QuestionInput = require 'views/components/questions/_QuestionInput.coffee'
 QuestionBubble = require 'views/components/questions/_QuestionBubble.coffee'
+io = require 'socket.io-client'
 
 {div} = React.DOM
 
@@ -9,9 +10,15 @@ QuestionIndex = React.createClass
 
   displayName: 'QuestionIndex'
 
+  componentWillUnmount: ->
+    PublishSubscribe.removeAllListenersOn.call document, "ask"
+
   componentDidMount: ->
-    #newQuestionList = _.union(@props.questions, fetchedQuestionList)
-    #@setProps questions: newQuestionList
+    url = window.location.protocol + '//' + window.location.host + window.location.pathname
+    socket = io.connect(url)
+    socket.on 'questionAdded', (question) => 
+      newQuestionList = _.union(@props.questions, [question])
+      @setProps questions: newQuestionList
     PublishSubscribe.listen.call document, "ask", (newQuestion) =>
       Question.create(question: newQuestion, questionBoard: @props.questionBoardId)
 
