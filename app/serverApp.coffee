@@ -20,7 +20,6 @@ server.use bodyParser.urlencoded(extended: true)
 server.set('views', __dirname + '/views')
 server.set('view engine', 'jade')
 
-
 require('routes.coffee')(server, 'server') # Initalise get routes
 
 server = server.listen 8000, 'localhost', ->

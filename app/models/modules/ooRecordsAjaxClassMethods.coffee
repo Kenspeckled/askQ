@@ -37,7 +37,7 @@ ajax =
   get: (path, args) ->
     httpRequest 'GET',  path, args, true
   post: (path, args) ->
-    httpRequest 'POST', path, args
+    httpRequest 'POST', path, args, true
   put: (path, args) ->
     httpRequest 'PUT',  path, args
   delete: (path, args) ->

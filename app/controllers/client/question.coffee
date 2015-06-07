@@ -13,7 +13,8 @@ questionController =
           QuestionBoard.create({url}).then (newQuestionBoard) ->
             resolve newQuestionBoard
     questionBoardPropsPromise.then (questionBoard) ->
-      props = questions: questionBoard.questions, questionBoardId: questionBoard.id
+      # FIXME: using _.union to turn undefined into an empty array
+      props = questions: _.union(questionBoard.questions), questionBoardId: questionBoard.id
       try
         React.render(
           React.createElement(QuestionIndex, props)

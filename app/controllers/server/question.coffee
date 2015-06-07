@@ -22,9 +22,10 @@ questionController =
 
   apiCreate: (req, res) ->
     try
-      Question.create(question: req.body.question, questionBoard: req.body.questionBoard).then (question) ->
-        QuestionBoard.update(req.body.questionBoard, questions: [question.id], true).done (questionBoard) ->
-          req.io.of('/'+questionBoard.url).emit 'questionAdded', question
+      Question.create(question: req.body.question, questionBoard: req.body.questionBoard).done (question) ->
+        QuestionBoard.update(question.questionBoard, questions: [question.id], true).done (questionBoard) ->
+          roomIo = req.io.of('/'+questionBoard.url)
+          roomIo.emit 'questionAdded', question
           res.status(200)
           res.send true
     catch error

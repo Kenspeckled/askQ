@@ -1,4 +1,3 @@
-io = require 'socket.io-client'
 {div, form, textarea, button} = React.DOM
 
 QuestionInput = React.createClass
@@ -13,9 +12,7 @@ QuestionInput = React.createClass
     @setState questionToAsk: ev.target.value
 
   componentDidMount: ->
-    url = window.location.protocol + '//' + window.location.host + window.location.pathname
-    socket = io.connect(url)
-    socket.on 'questionAdded', (question) => 
+    PublishSubscribe.listen.call document, "questionAdded", (question) =>
       @setState asking: false, questionToAsk: '' 
 
   handleSubmit: (ev) ->
