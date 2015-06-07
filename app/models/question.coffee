@@ -10,8 +10,6 @@ class Question extends ObjectOrientedRecord
         uniqueness: true
     questionBoard:
       dataType: 'association'
-      many: false
-      # preloadModel: Question
     votes:
       dataType: 'integer'
     flags:

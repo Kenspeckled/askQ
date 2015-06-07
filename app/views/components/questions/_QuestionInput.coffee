@@ -1,3 +1,4 @@
+io = require 'socket.io-client'
 {div, form, textarea, button} = React.DOM
 
 QuestionInput = React.createClass
@@ -5,23 +6,30 @@ QuestionInput = React.createClass
   displayName: 'QuestionInput'
   
   getInitialState: ->
+    asking: false
     questionToAsk: '' 
-    questionTmpKey: 0
 
   updateQuestionToAsk: (ev) ->
-    @setState questionTmpKey: @state.questionTmpKey++
-    @setState questionToAsk: question: ev.target.value, score: 5, questionTmpKey: @state.questionTmpKey, flagged: 0 
+    @setState questionToAsk: ev.target.value
+
+  componentDidMount: ->
+    url = window.location.protocol + '//' + window.location.host + window.location.pathname
+    socket = io.connect(url)
+    socket.on 'questionAdded', (question) => 
+      @setState asking: false, questionToAsk: '' 
 
   handleSubmit: (ev) ->
     ev.preventDefault()
-    PublishSubscribe.broadcast.call document, "ask", @state.questionToAsk
+    if @state.questionToAsk != ''
+      @setState asking: true
+      PublishSubscribe.broadcast.call document, "ask", @state.questionToAsk
 
   render: ->
     div className: 'question-input',
       div className: 'row',
         div className: 'col-xs-12',
           form className: 'form', onSubmit: @handleSubmit, 
-            textarea name: 'questionToAsk', className: 'form-control', onChange: @updateQuestionToAsk
-            button name: 'submit', type: 'submit', className: 'btn', 'ASK'
+            textarea name: 'questionToAsk', className: 'form-control' + (if @state.asking then ' submitting'), onChange: @updateQuestionToAsk, value: @state.questionToAsk
+            button name: 'submit', type: 'submit', className: 'btn', disabled: @state.asking, 'ASK'
 
 module.exports = QuestionInput
