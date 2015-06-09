@@ -1,5 +1,5 @@
 Question = require 'models/question.coffee'
-QuestionBoard = require 'models/question.coffee'
+QuestionBoard = require 'models/questionBoard.coffee'
 Header = require 'views/components/header/_Header.coffee'
 QuestionInput = require 'views/components/questions/_QuestionInput.coffee'
 QuestionBubble = require 'views/components/questions/_QuestionBubble.coffee'
@@ -18,16 +18,20 @@ QuestionIndex = React.createClass
     @state.socket.disconnect()
     PublishSubscribe.removeAllListenersOn.call document, "ask"
     PublishSubscribe.removeAllListenersOn.call document, "questionAdded"
+    PublishSubscribe.removeAllListenersOn.call document, "questionListUpdated"
 
   componentDidMount: ->
     url = window.location.protocol + '//' + window.location.host + window.location.pathname
     socket = io.connect(url, reconnect: true, multiplex: false)
     @setState socket: socket, ->
       @state.socket.on 'questionAdded', (question) => 
-        PublishSubscribe.broadcast.call document, "questionAdded", question
+        PublishSubscribe.broadcast.call document, "questionListUpdated"
     PublishSubscribe.listen.call document, "questionAdded", (newQuestion) =>
       newQuestionList = _.union(@props.questions, [newQuestion])
       @setProps questions: newQuestionList
+    PublishSubscribe.listen.call document, "questionListUpdated", =>
+      QuestionBoard.findBy(id: @props.questionBoardId).done (questionBoard) =>
+        @setProps questions: questionBoard.questions
     PublishSubscribe.listen.call document, "ask", (newQuestion) =>
       Question.create(question: newQuestion, questionBoard: @props.questionBoardId)
 

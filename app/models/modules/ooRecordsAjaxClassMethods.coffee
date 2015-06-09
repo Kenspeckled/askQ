@@ -33,36 +33,37 @@ if typeof window == 'undefined' #window is not defined on the server
 else
   url = window.location.href.replace(window.location.pathname, '').replace(window.location.search, '')
 
-ajax =
-  get: (path, args) ->
-    httpRequest 'GET',  path, args, true
-  post: (path, args) ->
-    httpRequest 'POST', path, args, true
-  put: (path, args) ->
-    httpRequest 'PUT',  path, args
-  delete: (path, args) ->
-    httpRequest 'DELETE', path, args
 
 AJAXClassMethods =
 
   moduleName: "AJAXClassMethods"
 
+  ajax: 
+    get: (path, args) ->
+      httpRequest 'GET',  path, args, true
+    post: (path, args) ->
+      httpRequest 'POST', path, args, true
+    put: (path, args) ->
+      httpRequest 'PUT',  path, args
+    delete: (path, args) ->
+      httpRequest 'DELETE', path, args
+
   all: ->
-    ajax.get @indexPath
+    @ajax.get @indexPath
 
   find: ->
-    ajax.get @showPath, {id: @id}
+    @ajax.get @showPath
 
   findBy: (opts) ->
-    ajax.get @showPath, opts
+    @ajax.get @showPath, opts
 
   where: (opts) ->
-    ajax.get @indexPath, opts
+    @ajax.get @indexPath, opts
 
   create: (opts) ->
-    ajax.post @createPath, opts
+    @ajax.post @createPath, opts
 
   update: (id, opts) ->
-    ajax.put @updatePath, opts
+    @ajax.put @updatePath, opts
 
 module.exports = AJAXClassMethods

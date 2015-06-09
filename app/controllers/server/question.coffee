@@ -17,8 +17,7 @@ questionController =
   apiShow: (req, res) ->
     onSuccess = (questionObject) ->
       res.json questionObject#.toJSON()
-    id = req.params.id
-    Question.find(id).then(onSuccess, notFound.bind(this, res))
+    Question.findBy(req.query).then(onSuccess, notFound.bind(this, res))
 
   apiCreate: (req, res) ->
     try
@@ -31,24 +30,17 @@ questionController =
       res.status(500)
       res.send (if process.env.SHOW_QS_ERRORS then error else false)
 
-  apiCreateBoard: (req, res) ->
-    QuestionBoard.create({url: req.body.url}).then (questionBoard) ->
-      req.io.of('/'+questionBoard.url) # ensure namespace exists
-      res.status(200)
-      res.json questionBoard 
-    , (errors) ->
-      errorMessage = _.map(errors, 'message').join ' '
+  apiVote: (req, res) ->
+    try
+      Question.vote(req.params.id, req.params.direction).then (question) ->
+        QuestionBoard.find(question.questionBoard).then (questionBoard) ->
+          req.io.of('/'+questionBoard.url).emit 'questionVote', question
+          res.status(200)
+          res.send true
+    catch error
+      console.log error
       res.status(500)
-      res.send (if process.env.SHOW_QS_ERRORS then errorMessage else false)
-
-  # apiVote: (req, res) ->
-  #   questionNumber = req.body.questionNumber
-  #   condition = req.body.condition
-  #   session.vote(questionNumber, condition)
-
-  # apiFlag: (req, res) ->
-  #   questionNumber = req.body.questionNumber
-  #   session.flag(questionNumber)
+      res.send (if process.env.SHOW_QS_ERRORS then error else false)
 
   index: (req, res) ->
     url = req.params.url
@@ -69,9 +61,6 @@ questionController =
         html = error if process.env.SHOW_QS_ERRORS
         res.status(500)
       res.render 'index', content: html, props: JSON.stringify(props)
-
-
-
 
 
 module.exports = questionController

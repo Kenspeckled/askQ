@@ -1,5 +1,5 @@
 class Question extends ObjectOrientedRecord
-  @showPath = 'api/question/'+@id
+  @showPath = 'api/question/show'
   @createPath = 'api/question/new'
   @updatePath = 'api/question/'+@id+'/update'
   @attributes =
@@ -14,5 +14,8 @@ class Question extends ObjectOrientedRecord
       dataType: 'integer'
     flags:
       dataType: 'integer'
+
+  @vote: (questionId, voteDirection) ->
+    @ajax.post '/api/question/'+questionId+'/vote/' + voteDirection
 
 module.exports = Question

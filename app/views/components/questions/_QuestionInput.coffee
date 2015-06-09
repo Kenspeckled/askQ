@@ -12,7 +12,7 @@ QuestionInput = React.createClass
     @setState questionToAsk: ev.target.value
 
   componentDidMount: ->
-    PublishSubscribe.listen.call document, "questionAdded", (question) =>
+    PublishSubscribe.listen.call document, "questionAdded", =>
       @setState asking: false, questionToAsk: '' 
 
   handleSubmit: (ev) ->

@@ -24,13 +24,6 @@ OORecordsORM =
       @client.rpush 'questionsForUrl:' + url, questionNumber
       @client.hset 'question:'+ url + ':' + questionNumber, 'text', questionText
 
-  vote: (questionNumber, condition) ->
-    voteModifier = -1 if condition == 'down'
-    voteModifier = 1 if condition == 'up'
-    @client.hincrby 'question:' + questionNumber, 'votes', voteModifier
-
-  flag: (questionNumber) ->
-    @client.hincrby 'question:' + questionNumber, 'flags', 1
 
   getQuestions: (url) ->
     questionsPromise = new Promise (resolve) =>

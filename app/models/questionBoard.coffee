@@ -1,7 +1,7 @@
 Question = require 'models/question.coffee'
 
 class QuestionBoard extends ObjectOrientedRecord
-  @showPath = 'api/question/index'
+  @showPath = 'api/question-board/show'
   @createPath = 'api/question-board/new'
   @attributes =
     url:

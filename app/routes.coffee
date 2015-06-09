@@ -1,5 +1,6 @@
 landingPageController = require 'landingPage.coffee'
 questionController = require 'question.coffee'
+questionBoardController = require 'questionBoard.coffee'
 
 routes = (router) ->
   if !(_scriptContext == 'server' or _scriptContext == 'client')
@@ -13,12 +14,12 @@ routes = (router) ->
 
   else if _scriptContext == 'server'
     router.get '/api/question/index', questionController.apiIndex
-    router.get '/api/question/:id', questionController.apiShow
+    router.get '/api/question/show', questionController.apiShow
     router.post '/api/question/new', questionController.apiCreate
-    router.post '/api/question-board/new', questionController.apiCreateBoard
-    # router.post '/api/vote', sessionController.vote
-    # router.post '/api/flag', sessionController.flag
-    # router.get '/api/all-questions', sessionController.indexJSON
+    router.post '/api/question/:id/vote/:direction', questionController.apiVote
+
+    router.get '/api/question-board/show', questionBoardController.apiShow
+    router.post '/api/question-board/new', questionBoardController.apiCreate
 
 module.exports = routes
 
