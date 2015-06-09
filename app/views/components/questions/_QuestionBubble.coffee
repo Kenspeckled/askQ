@@ -7,12 +7,10 @@ QuestionBubble = React.createClass
   displayName: 'QuestionBubble'
 
   upVote: ->
-    Question.vote(@props.id, 'up').then ->
-      PublishSubscribe.broadcast.call document, "questionListUpdated"
+    Question.vote(@props.id, 'up')
 
   downVote: ->
-    Question.vote(@props.id, 'down').then ->
-      PublishSubscribe.broadcast.call document, "questionListUpdated"
+    Question.vote(@props.id, 'down')
 
   render: ->
     div className: 'question-bubble',

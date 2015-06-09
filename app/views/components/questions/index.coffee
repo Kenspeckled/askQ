@@ -15,7 +15,7 @@ QuestionIndex = React.createClass
     socket: {}
 
   componentWillUnmount: ->
-    @state.socket.disconnect()
+    @props.socket.disconnect()
     PublishSubscribe.removeAllListenersOn.call document, "ask"
     PublishSubscribe.removeAllListenersOn.call document, "questionAdded"
     PublishSubscribe.removeAllListenersOn.call document, "questionListUpdated"
@@ -23,8 +23,10 @@ QuestionIndex = React.createClass
   componentDidMount: ->
     url = window.location.protocol + '//' + window.location.host + window.location.pathname
     socket = io.connect(url, reconnect: true, multiplex: false)
-    @setState socket: socket, ->
-      @state.socket.on 'questionAdded', (question) => 
+    @setProps socket: socket, =>
+      @props.socket.on 'questionAdded', -> 
+        PublishSubscribe.broadcast.call document, "questionListUpdated"
+      @props.socket.on 'questionVote', -> 
         PublishSubscribe.broadcast.call document, "questionListUpdated"
     PublishSubscribe.listen.call document, "questionAdded", (newQuestion) =>
       newQuestionList = _.union(@props.questions, [newQuestion])
