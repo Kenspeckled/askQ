@@ -9,10 +9,11 @@ notFound = (res) ->
 questionController =
 
   apiIndex: (req, res) ->
-    onSuccess = (questionObject) ->
-      res.json questionObject#.toJSON()
+    onSuccess = (questionBoard) ->
+      req.io.of('/'+questionBoard.url) # ensure namespace exists
+      res.json questionBoard#.toJSON()
     url = req.query.url
-    QuestionBoard.findBy(url: url).then(onSuccess, notFound.bind(this, res))
+    findPromise = QuestionBoard.findBy(url: url).then(onSuccess, notFound.bind(this, res))
 
   apiShow: (req, res) ->
     onSuccess = (questionObject) ->
@@ -24,8 +25,7 @@ questionController =
     try
       Question.create(question: req.body.question, questionBoard: req.body.questionBoard).done (question) ->
         QuestionBoard.update(question.questionBoard, questions: [question.id], true).done (questionBoard) ->
-          roomIo = req.io.of('/'+questionBoard.url)
-          roomIo.emit 'questionAdded', question
+          req.io.of('/'+questionBoard.url).emit 'questionAdded', question
           res.status(200)
           res.send true
     catch error
@@ -34,6 +34,7 @@ questionController =
 
   apiCreateBoard: (req, res) ->
     QuestionBoard.create({url: req.body.url}).then (questionBoard) ->
+      req.io.of('/'+questionBoard.url) # ensure namespace exists
       res.status(200)
       res.json questionBoard 
     , (errors) ->
@@ -60,7 +61,8 @@ questionController =
           QuestionBoard.create({url}).then (newQuestionBoard) ->
             resolve newQuestionBoard
     questionBoardPropsPromise.then (questionBoard) ->
-      props = questions: questionBoard.questions, questionBoardId: questionBoard.id
+      req.io.of('/'+questionBoard.url) # ensure namespace exists
+      props = questions: (questionBoard.questions || []), questionBoardId: questionBoard.id
       try
         element = React.createElement(QuestionIndex, props)
         html = React.renderToString element

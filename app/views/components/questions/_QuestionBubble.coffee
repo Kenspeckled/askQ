@@ -11,7 +11,7 @@ class QuestionBubble extends React.Component
           div null, @props.question
         div className: 'actions',
           div className: 'up-vote'
-          div className: 'score', @props.score
+          div className: 'score', (@props.score || 0)
           div className: 'down-vote'
 
 module.exports = QuestionBubble
