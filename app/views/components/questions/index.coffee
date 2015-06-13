@@ -28,14 +28,12 @@ QuestionIndex = React.createClass
         PublishSubscribe.broadcast.call document, "questionListUpdated"
       @props.socket.on 'questionVote', -> 
         PublishSubscribe.broadcast.call document, "questionListUpdated"
-    PublishSubscribe.listen.call document, "questionAdded", (newQuestion) =>
-      newQuestionList = _.union(@props.questions, [newQuestion])
-      @setProps questions: newQuestionList
     PublishSubscribe.listen.call document, "questionListUpdated", =>
       QuestionBoard.findBy(id: @props.questionBoardId).done (questionBoard) =>
         @setProps questions: questionBoard.questions
     PublishSubscribe.listen.call document, "ask", (newQuestion) =>
-      Question.create(question: newQuestion, questionBoard: @props.questionBoardId)
+      Question.create(question: newQuestion, questionBoard: @props.questionBoardId).then ->
+        PublishSubscribe.broadcast.call document, "questionAsked"
 
   render: ->
     div id: 'question-index',
