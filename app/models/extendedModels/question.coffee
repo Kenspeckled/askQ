@@ -1,8 +1,18 @@
 Promise = require 'promise'
-ClientQuestion = require 'models/question.coffee'
-ooRecordsORMClassMethods = require 'models/extendedModels/modules/ooRecordsORMClassMethods.coffee'
-class Question extends ClientQuestion
-  @extend ooRecordsORMClassMethods
+RookServerObject = require 'rook/lib/models/ServerObject'
+class Question extends RookServerObject
+  @attributes =
+    question:
+      dataType: 'string'
+      validates:
+        presence: true
+    questionBoard:
+      dataType: 'association'
+    votes:
+      dataType: 'integer'
+    flags:
+      dataType: 'integer'
+
 
   @vote: (questionId, voteDirection) ->
     if voteDirection == 'down'

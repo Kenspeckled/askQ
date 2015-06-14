@@ -12,14 +12,14 @@ QuestionInput = React.createClass
     @setState questionToAsk: ev.target.value
 
   componentDidMount: ->
-    PublishSubscribe.listen.call document, "questionAsked", =>
+    publishSubscribe.listen.call document, "questionAsked", =>
       @setState asking: false, questionToAsk: '' 
 
   handleSubmit: (ev) ->
     ev.preventDefault()
     if @state.questionToAsk != ''
       @setState asking: true
-      PublishSubscribe.broadcast.call document, "ask", @state.questionToAsk
+      publishSubscribe.broadcast.call document, "ask", @state.questionToAsk
 
   render: ->
     div className: 'question-input',

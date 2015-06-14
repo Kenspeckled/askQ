@@ -16,24 +16,24 @@ QuestionIndex = React.createClass
 
   componentWillUnmount: ->
     @props.socket.disconnect()
-    PublishSubscribe.removeAllListenersOn.call document, "ask"
-    PublishSubscribe.removeAllListenersOn.call document, "questionAdded"
-    PublishSubscribe.removeAllListenersOn.call document, "questionListUpdated"
+    publishSubscribe.removeAllListenersOn.call document, "ask"
+    publishSubscribe.removeAllListenersOn.call document, "questionAdded"
+    publishSubscribe.removeAllListenersOn.call document, "questionListUpdated"
 
   componentDidMount: ->
     url = window.location.protocol + '//' + window.location.host + window.location.pathname
     socket = io.connect(url, reconnect: true, multiplex: false)
     @setProps socket: socket, =>
       @props.socket.on 'questionAdded', -> 
-        PublishSubscribe.broadcast.call document, "questionListUpdated"
+        publishSubscribe.broadcast.call document, "questionListUpdated"
       @props.socket.on 'questionVote', -> 
-        PublishSubscribe.broadcast.call document, "questionListUpdated"
-    PublishSubscribe.listen.call document, "questionListUpdated", =>
+        publishSubscribe.broadcast.call document, "questionListUpdated"
+    publishSubscribe.listen.call document, "questionListUpdated", =>
       QuestionBoard.findBy(id: @props.questionBoardId).done (questionBoard) =>
         @setProps questions: questionBoard.questions
-    PublishSubscribe.listen.call document, "ask", (newQuestion) =>
+    publishSubscribe.listen.call document, "ask", (newQuestion) =>
       Question.create(question: newQuestion, questionBoard: @props.questionBoardId).then ->
-        PublishSubscribe.broadcast.call document, "questionAsked"
+        publishSubscribe.broadcast.call document, "questionAsked"
 
   render: ->
     div id: 'question-index',

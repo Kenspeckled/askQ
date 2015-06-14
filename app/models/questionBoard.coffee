@@ -1,18 +1,6 @@
-Question = require 'models/question.coffee'
-
-class QuestionBoard extends ObjectOrientedRecord
+RookClientObject = require 'rook/lib/models/ClientObject'
+class QuestionBoard extends RookClientObject
   @showPath = 'api/question-board/show'
   @createPath = 'api/question-board/new'
-  @attributes =
-    url:
-      dataType: 'string'
-      identifiable: true
-      validates:
-        presence: true
-        uniqueness: true
-    questions:
-      dataType: 'association'
-      many: true
-      preloadModel: Question
 
 module.exports = QuestionBoard

@@ -1,8 +1,7 @@
 global.React = require 'react'
 global._ = require 'lodash'
-global._utilities = require '../frameworkCore/utilities.coffee'
+rook = require('rook')
+global._utilities = rook.utilities
+global.publishSubscribe = rook.publishSubscribe
 global.ValidationError = require '../frameworkCore/ValidationError.coffee'
-global.BaseClass = require '../frameworkCore/Base.coffee'
-global.ObjectOrientedRecord = require '../frameworkCore/ObjectOrientedRecord.coffee'
-global.ActionHandler = require '../frameworkCore/ActionHandler.coffee'
-global.PublishSubscribe = require 'models/modules/pubSub.coffee'
+#global.ActionHandler = require '../frameworkCore/ActionHandler.coffee'
