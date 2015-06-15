@@ -13,13 +13,13 @@ routes = (router) ->
     router.start()
 
   else if _scriptContext == 'server'
-    router.get '/api/question/index', questionController.apiIndex
-    router.get '/api/question/show', questionController.apiShow
-    router.post '/api/question/new', questionController.apiCreate
+    router.get '/api/question', questionController.apiShow
+    router.get '/api/questions', questionController.apiIndex
+    router.post '/api/question', questionController.apiCreate
     router.post '/api/question/:id/vote/:direction', questionController.apiVote
 
-    router.get '/api/question-board/show', questionBoardController.apiShow
-    router.post '/api/question-board/new', questionBoardController.apiCreate
+    router.get '/api/question-board', questionBoardController.apiShow
+    router.post '/api/question-board', questionBoardController.apiCreate
 
 module.exports = routes
 
