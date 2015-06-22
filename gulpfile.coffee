@@ -38,7 +38,7 @@ gulp.task 'browserify', ->
   bundle()
 
 gulp.task 'ugly_browserify', ->
-  bundler = watchify browserify './app/clientApp.coffee', {
+  bundler = browserify './app/clientApp.coffee', {
     basedir: __dirname
     paths: ['./app', './app/client']
     cache: {} # required for watchify
