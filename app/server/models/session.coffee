@@ -1,5 +1,4 @@
-RookServerObject = require 'rook/lib/models/ServerObject'
-class Session extends RookServerObject
+class Session extends ObjectOrientedRecord
   @attributes =
     sessionId:
       dataType: 'string'
@@ -8,10 +7,13 @@ class Session extends RookServerObject
         presence: true
         uniqueness: true
     votedQuestions:
-      dataType: 'association'
+      dataType: 'reference'
+      referenceModelName: 'Question'
       many: true
     askedQuestions:
-      dataType: 'association'
+      dataType: 'reference'
+      referenceModelName: 'Question'
       many: true
+      reverseReferenceAttribute: 'sessionOwner'
 
 module.exports = Session

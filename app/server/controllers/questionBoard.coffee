@@ -1,4 +1,4 @@
-QuestionBoard = require 'models/extendedModels/questionBoard.coffee'
+QuestionBoard = require 'models/questionBoard.coffee'
 
 notFound = (res) ->
   res.sendStatus(404)
@@ -18,6 +18,11 @@ questionBoardController =
   apiShow: (req, res) ->
     onSuccess = (questionBoard) ->
       res.json questionBoard
-    QuestionBoard.findBy(req.query).then(onSuccess, notFound.bind(this, res))
+    onNotFound = ->
+      QuestionBoard.create({url: req.query.url}).then (questionBoard) ->
+        req.io.of('/'+questionBoard.url) # ensure namespace exists
+        res.json questionBoard 
+    findByArgs = if req.params.id then {id: req.params.id} else req.query
+    QuestionBoard.findBy(findByArgs).then(onSuccess, onNotFound)
 
 module.exports = questionBoardController

@@ -1,12 +1,13 @@
 # Add absolute paths for all require statements to './app'
-# include server controllers as separate path
-process.env.NODE_PATH =  __dirname+':'+__dirname + '/controllers/server'
+process.env.NODE_PATH =  __dirname+':'+__dirname + '/server'
 require('module').Module._initPaths()
+global._scriptContext = isServer: true # needed for routing
 require 'globals.coffee'
+global.ObjectOrientedRecord = require 'oomph/lib/models/ServerObject'
 cookieParser = require 'cookie-parser'
 bodyParser = require 'body-parser'
 
-global._scriptContext = 'server' # needed for routing
+
 express = require 'express'
 server = express()
 io = require('socket.io')()

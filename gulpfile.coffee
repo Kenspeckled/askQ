@@ -28,7 +28,7 @@ gulp.task 'shims', ->
 gulp.task 'browserify', ->
   bundler = watchify browserify './app/clientApp.coffee', {
     basedir: __dirname
-    paths: ['./app', './app/controllers/client']
+    paths: ['./app', './app/client']
     cache: {} # required for watchify
     packageCache: {} # required for watchify
     fullPaths: true # required to be true only for watchify

@@ -29,7 +29,7 @@ QuestionIndex = React.createClass
       @props.socket.on 'questionVote', -> 
         publishSubscribe.broadcast.call document, "questionListUpdated"
     publishSubscribe.listen.call document, "questionListUpdated", =>
-      QuestionBoard.findBy(id: @props.questionBoardId).done (questionBoard) =>
+      QuestionBoard.find(@props.questionBoardId).done (questionBoard) =>
         @setProps questions: questionBoard.questions
     publishSubscribe.listen.call document, "ask", (newQuestion) =>
       Question.create(question: newQuestion, questionBoard: @props.questionBoardId).then ->

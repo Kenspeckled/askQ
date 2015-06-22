@@ -1,16 +1,18 @@
 Promise = require 'promise'
-RookServerObject = require 'rook/lib/models/ServerObject'
-class Question extends RookServerObject
+class Question extends ObjectOrientedRecord
   @attributes =
     question:
       dataType: 'string'
       validates:
         presence: true
     questionBoard:
-      dataType: 'association'
+      dataType: 'reference'
+      referenceModelName: 'QuestionBoard'
+      reverseReferenceAttribute: 'questions'
+    sessionOwner:
+      dataType: 'reference'
+      referenceModelName: 'Session'
     votes:
-      dataType: 'integer'
-    flags:
       dataType: 'integer'
 
 
@@ -20,7 +22,7 @@ class Question extends RookServerObject
     else if voteDirection == 'up'
       voteModifier = 1 
     votePromise = new Promise (resolve, reject) =>
-      @client.hincrby 'Question:' + questionId, 'votes', voteModifier, (error, res) =>
+      @redis.hincrby 'Question:' + questionId, 'votes', voteModifier, (error, res) =>
         if error
           reject()
         else
