@@ -7,5 +7,5 @@ end
 
 # update node modules
 run "npm install"
-run "NODE_ENV=production coffee ./app/serverApp.coffee"
+run "coffee ./app/serverApp.coffee"
 
