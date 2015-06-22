@@ -7,5 +7,5 @@ end
 
 # update node modules
 run "npm install"
-run "coffee ./app/serverApp.coffee"
+run "gulp"
 
