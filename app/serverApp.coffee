@@ -25,15 +25,10 @@ server.set('view engine', 'jade')
 
 require('routes.coffee')(server, 'server') # Initalise get routes
 
-if process.env.NODE_ENV == 'production'
-  server = server.listen 3000, ->
-    host = server.address().address
-    port = server.address().port
-else
-  server = server.listen 8000, 'localhost', ->
-    host = server.address().address
-    port = server.address().port
-    console.log "App listening at http://%s:%s", host, port
+server = server.listen 8000, 'localhost', ->
+  host = server.address().address
+  port = server.address().port
+  console.log "App listening at http://%s:%s", host, port
 
 io.listen(server)
 
