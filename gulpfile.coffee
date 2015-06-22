@@ -5,7 +5,6 @@ uglify = require 'gulp-uglify'
 slim = require 'gulp-slim'
 sass = require 'gulp-sass'
 concat = require 'gulp-concat'
-cache = require 'gulp-cached'
 rename = require 'gulp-rename'
 browserify = require 'browserify'
 source = require 'vinyl-source-stream'
@@ -13,17 +12,6 @@ buffer = require 'vinyl-buffer'
 coffeeify = require 'coffeeify'
 watchify = require 'watchify'
 jasmine = require 'gulp-jasmine'
-
-gulp.task 'shims', ->
-  gulp.src [
-    'bower_components/es6-shim/es6-shim.min.js'
-  ]
-  .pipe concat 'shims.js'
-  .pipe gulp.dest 'public'
-  gulp.src [
-    'bower_components/es6-shim/es6-shim.map'
-  ]
-  .pipe gulp.dest 'public'
 
 gulp.task 'browserify', ->
   bundler = watchify browserify './app/clientApp.coffee', {
@@ -44,6 +32,30 @@ gulp.task 'browserify', ->
       .pipe buffer()
       .pipe gulp.dest 'public'
       # .pipe uglify()
+      .pipe rename(suffix: '.min')
+      .pipe gulp.dest 'public'
+  bundler.on('update', bundle)
+  bundle()
+
+gulp.task 'ugly_browserify', ->
+  bundler = watchify browserify './app/clientApp.coffee', {
+    basedir: __dirname
+    paths: ['./app', './app/client']
+    cache: {} # required for watchify
+    packageCache: {} # required for watchify
+    fullPaths: true # required to be true only for watchify
+  }
+  bundler.transform('coffeeify')
+  bundle = ->
+    localTime = new Date()
+    localTime.setMinutes(localTime.getMinutes() - localTime.getTimezoneOffset())
+    console.log localTime.toISOString().slice(11, -5) + "  -- Browserifying"
+    bundler.bundle()
+      .on 'error', gutil.log.bind(gutil, 'Browserify Error')
+      .pipe source('app.js')
+      .pipe buffer()
+      .pipe gulp.dest 'public'
+      .pipe uglify()
       .pipe rename(suffix: '.min')
       .pipe gulp.dest 'public'
   bundler.on('update', bundle)
@@ -85,4 +97,5 @@ gulp.task 'watch', ->
   gulp.watch 'assets/**/*.sass', ['sass']
 
 # Default task will call all tasks created so far
-gulp.task 'default', ['browserify', 'shims', 'assets', 'sass', 'watch']
+gulp.task 'default', ['browserify', 'assets', 'sass', 'watch']
+gulp.task 'deploy', ['ugly_browserify', 'assets', 'sass']
