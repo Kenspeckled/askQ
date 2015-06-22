@@ -30,19 +30,18 @@
     "watchify": "~3.1.1"
   },
   "scripts": {
-    "postinstall": "bower install",
     "start": "SHOW_QS_ERRORS=true coffee app/serverApp.coffee",
     "test": "jasmine"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Kenspeckled/qs.git"
+    "url": "https://github.com/Kenspeckled/askQ.git"
   },
   "author": "Kenspeckle",
   "bugs": {
-    "url": "https://github.com/Kenspeckled/qs/issues"
+    "url": "https://github.com/Kenspeckled/askQ/issues"
   },
-  "homepage": "https://github.com/Kenspeckled/qs",
+  "homepage": "https://github.com/Kenspeckled/askQ",
   "dependencies": {
     "body-parser": "^1.12.4",
     "coffee-script": "~1.9.1",
