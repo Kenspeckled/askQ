@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+oldrev, newrev = ARGV
+
+def run(cmd)
+  exit($?.exitstatus) unless system "umask 002 && #{cmd}"
+end
+
+# update node modules
+run "npm install"
+run "NODE_ENV=production coffee ./app/serverApp.coffee"
+
