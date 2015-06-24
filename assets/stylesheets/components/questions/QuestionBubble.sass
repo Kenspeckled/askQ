@@ -1,6 +1,6 @@
 .question-bubble
   +border-radius(18px)
-  background-color: $white 
+  background: white 
   position: relative
   padding: 30px
   font-size: 16px
@@ -33,27 +33,40 @@
   .question-container
     @extend .clearfix
   .question
-    width: 88%
     float: left
+    width: 80%
+    @media screen and (min-width: $screen-sm)
+      width: 90%
   .actions
     @extend .clearfix
-    width: 12%
     float: right
     text-align: center
+    width: 20%
+    @media screen and (min-width: $screen-sm)
+      width: 10%
 
   .up-vote,
   .down-vote
+    background: transparent
+    border: none
     display: inline-block
     width: 0
     height: 0
+    margin: 0
+    padding: 0
     cursor: pointer
+    &:hover,
+    &:focus,
+    &:active
+      outline: none
 
   .up-vote
     border-left: 20px solid transparent
     border-right: 20px solid transparent
     border-bottom: 20px solid $light-grey
     &:hover
-      border-bottom-color: $green
+      border-bottom-color: lighten($green, 5%)
+    &.voted,
     &:active
       border-bottom-color: $light-green
 
@@ -67,7 +80,8 @@
     border-right: 20px solid transparent
     border-top: 20px solid $light-grey 
     &:hover
-      border-top-color: $red
+      border-top-color: lighten($red, 5%)
+    &.voted,
     &:active
       border-top-color: $light-red
 

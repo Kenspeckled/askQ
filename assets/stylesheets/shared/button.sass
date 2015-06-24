@@ -1,0 +1,26 @@
+/**************/
+/*   Button   */
+/**************/
+
+.btn
+  font-size: 1.05em
+  font-weight: 300
+  text-transform: uppercase
+  border: none
+  color: #fff
+  outline: none
+  cursor: pointer
+  padding: .6em 1.5em
+  +unselectable
+  background-color: $green
+  color: white 
+  &:hover
+    background-color: lighten($green, 2%)
+  &:active
+    background-color: darken($green, 2%)
+  &[disabled="disabled"]
+    background-color: lighten($light-grey, 30%)
+  &.large
+    font-size: 1.2em
+    padding: .5em .9em
+

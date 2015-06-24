@@ -2,8 +2,28 @@
 /* LandingPage */
 /***************/
 
-#landing-page
+.landing-page
   min-height: 100vh
   .main
     background-color: $yellow
     min-height: 100%
+  .container
+    max-width: 100%
+    @media screen and (min-width: $screen-sm)
+      max-width: 800px 
+
+  .question-board-form
+    font-size: 20px
+    margin: 40px 0
+    .input-label
+      display: none
+      padding: 4px 0 0 0
+      color: white
+      text-align: right
+      @media screen and (min-width: $screen-sm)
+        margin-right: -30px
+        display: block
+    .input
+      margin-bottom: 10px
+    
+    
