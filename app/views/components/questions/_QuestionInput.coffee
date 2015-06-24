@@ -1,4 +1,4 @@
-{div, form, textarea, button} = React.DOM
+{div, form, textarea, button, br} = React.DOM
 
 QuestionInput = React.createClass
 
@@ -26,7 +26,9 @@ QuestionInput = React.createClass
       div className: 'row',
         div className: 'col-xs-12',
           form className: 'form', onSubmit: @handleSubmit, 
-            textarea name: 'questionToAsk', className: 'form-control' + (if @state.asking then ' submitting'), onChange: @updateQuestionToAsk, value: @state.questionToAsk
-            button name: 'submit', type: 'submit', className: 'btn', disabled: @state.asking, 'ASK'
+            textarea name: 'questionToAsk', className: 'input' + (if @state.asking then ' submitting' else ''), placeholder: 'Your question...', onChange: @updateQuestionToAsk, value: @state.questionToAsk
+            br null
+            br null
+            button name: 'submit', type: 'submit', className: 'btn', disabled: @state.asking, 'Ask'
 
 module.exports = QuestionInput

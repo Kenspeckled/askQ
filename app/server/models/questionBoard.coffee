@@ -6,6 +6,8 @@ class QuestionBoard extends ObjectOrientedRecord
       validates:
         presence: true
         uniqueness: true
+    description:
+      dataType: 'string'
     questions:
       dataType: 'reference'
       referenceModelName: 'Question'

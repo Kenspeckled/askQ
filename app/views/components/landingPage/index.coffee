@@ -1,22 +1,24 @@
+if _scriptContext.isClient
+  ClientRouter = require 'clientRouter/ClientRouter.coffee'
+
 Header = require 'views/components/header/_Header.coffee'
-{div, header, h1, img, form, input, a} = React.DOM
+{div, header, h1, h2, img, br, form, label, input, textarea, button, p} = React.DOM
 
 LandingPage = React.createClass 
 
   displayName: 'LandingPage'
 
   generateRandomUrl: ->
-    word1Array = ['two', 'three', 'four']
-    word2Array = ['orange', 'green', 'blue']
-    word3Array = ['rocks', 'papers', 'scissors']
+    word1Array = ['angry', 'beautiful', 'slippery', 'wonderful', 'dangerous', 'helpful', 'insightful', 'contaminated', 'human', 'plentiful']
+    word2Array = ['monkeys', 'children', 'politicians', 'knives', 'recepies', 'horses', 'nightmares', 'potatoes', 'pies', 'poetry']
     url = []
     url.push word1Array[Math.floor(Math.random()*word1Array.length)]
     url.push word2Array[Math.floor(Math.random()*word2Array.length)]
-    url.push word3Array[Math.floor(Math.random()*word3Array.length)]
     url.join '-'
 
   getInitialState: ->
     url: null
+    description: null
 
   componentDidMount: ->
     @setState url: @generateRandomUrl()
@@ -24,16 +26,43 @@ LandingPage = React.createClass
   handleUrlChange: (ev) ->
     @setState url: ev.target.value
 
+  handleDescriptionChange: (ev) ->
+    @setState description: ev.target.value
+
+  handleSubmit: (ev) ->
+    ev.preventDefault()
+    url = @state.url
+    url += '?description=' + @state.description if @state.description
+    window.location = url
+
   render: ->
-    div id: 'landing-page',
+    div className: 'landing-page',
       React.createElement(Header, @props)
       div className: 'main',
         div className: 'container',
           div className: 'row',
             div className: 'col-sm-12',
-              form onSubmit: @handleSubmit,
-                input type: 'text', name: 'new-session', onChange: @handleUrlChange, value: @state.url
-                a className: 'btn', href: '/'+@state.url, 'Join Question Board'
-
+              h1 null, 'Real-time question board'
+          div className: 'row',
+            div className: 'col-sm-12',
+              form className: 'question-board-form', onSubmit: @handleSubmit,
+                div className: 'row',
+                  div className: 'col-sm-2',
+                    div className: 'input-label', 'askq.co/'
+                  div className: 'col-sm-10',
+                    input className: 'input', type: 'text', name: 'question-board-url', onChange: @handleUrlChange, placeholder: 'Question board name', value: @state.url
+                div className: 'row',
+                  div className: 'col-sm-10 col-sm-offset-2',
+                    textarea className: 'input', name: 'question-board-description', placeholder: 'Description', onChange: @handleDescriptionChange, value: @state.description
+                div className: 'row',
+                  div className: 'col-sm-10 col-sm-offset-2',
+                    button className: 'btn', type: 'submit', 'Start Asking Questions'
+          div className: 'row',
+            div className: 'col-sm-12',
+              h2 null, "Find the questions on everyone's mind"
+              p null, "Q&A session are sometimes the most engaging part of a talk or presentation, that is if the questions asked are relevant and interesting to the whole audience. AskQ allows audiences to ask and vote fo questions and ranks the top questions." 
+              p null, "Create a new qustion and description for your question board. Question boards are public and anyone navigating to that address will be able to access your question board and ask new questions." 
+              p null, "Share your question url with your audience and see questions and votes appear in real-time." 
+              p null, "Refreshing the page will reorder the questions with the highest votes appearing at the top. Sessions are temporary and will expire within 12 hours of inactivity (no new votes or new questions)."
 
 module.exports = LandingPage

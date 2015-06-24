@@ -6,7 +6,7 @@ notFound = (res) ->
 questionBoardController =
 
   apiCreate: (req, res) ->
-    QuestionBoard.create({url: req.body.url}).then (questionBoard) ->
+    QuestionBoard.create({url: req.body.url, description: req.body.description}).then (questionBoard) ->
       req.io.of('/'+questionBoard.url) # ensure namespace exists
       res.status(200)
       res.json questionBoard 
@@ -19,7 +19,7 @@ questionBoardController =
     onSuccess = (questionBoard) ->
       res.json questionBoard
     onNotFound = ->
-      QuestionBoard.create({url: req.query.url}).then (questionBoard) ->
+      QuestionBoard.create({url: req.query.url, description: req.query.description}).then (questionBoard) ->
         req.io.of('/'+questionBoard.url) # ensure namespace exists
         res.json questionBoard 
     findByArgs = if req.params.id then {id: req.params.id} else req.query

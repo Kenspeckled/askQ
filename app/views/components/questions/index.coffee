@@ -29,20 +29,20 @@ QuestionIndex = React.createClass
       @props.socket.on 'questionVote', -> 
         publishSubscribe.broadcast.call document, "questionListUpdated"
     publishSubscribe.listen.call document, "questionListUpdated", =>
-      QuestionBoard.find(@props.questionBoardId).done (questionBoard) =>
-        @setProps questions: questionBoard.questions
+      QuestionBoard.find(@props.questionBoard.id).done (questionBoard) =>
+        @setProps questionBoard: questionBoard
     publishSubscribe.listen.call document, "ask", (newQuestion) =>
-      Question.create(question: newQuestion, questionBoard: @props.questionBoardId).then ->
+      Question.create(question: newQuestion, questionBoard: @props.questionBoard.id).then ->
         publishSubscribe.broadcast.call document, "questionAsked"
 
   render: ->
     div id: 'question-index',
       React.createElement(Header, @props)
       div className: 'container main',
-        div className: 'row',
-          if @props.questions.length > 0
-            for question in @props.questions
-              div className: 'col-sm-12 col-md-6',
+        div null,
+          if @props.questionBoard.questions.length > 0
+            for question in @props.questionBoard.questions
+              div className: 'col-sm-12 col-md-6 question-container',
                 React.createElement QuestionBubble, question
           else
             p className: 'no-questions', 'No Questions have been asked yet. Be the first...'

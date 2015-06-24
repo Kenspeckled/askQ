@@ -82,15 +82,16 @@ questionController =
 
   index: (req, res) ->
     url = req.params.url
+    description = req.query.description
     questionBoardPropsPromise = new Promise (resolve) ->
       QuestionBoard.findBy({url}).then (questionBoard) ->
         resolve questionBoard
       , ->
-        QuestionBoard.create({url}).then (newQuestionBoard) ->
+        QuestionBoard.create({url, description}).then (newQuestionBoard) ->
           req.io.of('/'+newQuestionBoard.url) # ensure namespace exists
           resolve newQuestionBoard
     questionBoardPropsPromise.then (questionBoard) ->
-      props = questions: (questionBoard.questions || []), questionBoardId: questionBoard.id
+      props = {questionBoard}
       try
         element = React.createElement(QuestionIndex, props)
         html = React.renderToString element

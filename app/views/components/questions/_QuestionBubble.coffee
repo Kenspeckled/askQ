@@ -6,11 +6,20 @@ QuestionBubble = React.createClass
 
   displayName: 'QuestionBubble'
 
-  upVote: ->
-    Question.vote(@props.id, 'up')
+  getInitialState: ->
+    vote: 0
 
-  downVote: ->
-    Question.vote(@props.id, 'down')
+  upVote: (ev) ->
+    ev.preventDefault()
+    if @state.vote < 1
+      Question.vote(@props.id, 'up')
+      @setState vote: @state.vote + 1
+
+  downVote: (ev) ->
+    ev.preventDefault()
+    if @state.vote > -1
+      Question.vote(@props.id, 'down')
+      @setState vote: @state.vote - 1
 
   render: ->
     div className: 'question-bubble',
@@ -18,8 +27,8 @@ QuestionBubble = React.createClass
         div className: 'question',
           div null, @props.question
         div className: 'actions',
-          button className: 'up-vote', type: 'button', onClick: @upVote
+          button className: 'up-vote' + (if @state.vote == 1 then ' voted' else ''), type: 'button', onClick: @upVote
           div className: 'score', (@props.votes || 0)
-          button className: 'down-vote', type: 'button', onClick: @downVote
+          button className: 'down-vote' + (if @state.vote == -1 then ' voted' else ''), type: 'button', onClick: @downVote
 
 module.exports = QuestionBubble

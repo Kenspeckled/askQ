@@ -13,7 +13,7 @@ questionController =
           QuestionBoard.create({url}).then (newQuestionBoard) ->
             resolve newQuestionBoard
     questionBoardPropsPromise.then (questionBoard) ->
-      props = questions: (questionBoard.questions || []), questionBoardId: questionBoard.id
+      props = {questionBoard}
       try
         React.render(
           React.createElement(QuestionIndex, props)
