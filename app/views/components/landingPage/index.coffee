@@ -4,7 +4,7 @@ if _scriptContext.isClient
 Header = require 'views/components/header/_Header.coffee'
 {div, header, h1, h2, img, br, form, label, input, textarea, button, p} = React.DOM
 
-LandingPage = React.createClass 
+LandingPage = React.createClass
 
   displayName: 'LandingPage'
 
@@ -60,9 +60,9 @@ LandingPage = React.createClass
           div className: 'row',
             div className: 'col-sm-12',
               h2 null, "Find the questions on everyone's mind"
-              p null, "Q&A session are sometimes the most engaging part of a talk or presentation, that is if the questions asked are relevant and interesting to the whole audience. AskQ allows audiences to ask and vote fo questions and ranks the top questions." 
-              p null, "Create a new qustion and description for your question board. Question boards are public and anyone navigating to that address will be able to access your question board and ask new questions." 
-              p null, "Share your question url with your audience and see questions and votes appear in real-time." 
+              p null, "Q&A session are sometimes the most engaging part of a talk or presentation, that is if the questions asked are relevant and interesting to the whole audience. AskQ allows audiences to ask and vote for questions and ranks the top questions."
+              p null, "Create a new qustion and description for your question board. Question boards are public and anyone navigating to that address will be able to access your question board and ask new questions."
+              p null, "Share your question url with your audience and see questions and votes appear in real-time."
               p null, "Refreshing the page will reorder the questions with the highest votes appearing at the top. Sessions are temporary and will expire within 12 hours of inactivity (no new votes or new questions)."
 
 module.exports = LandingPage
