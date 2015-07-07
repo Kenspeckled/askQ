@@ -6,7 +6,7 @@ notFound = (res) ->
 urlString = (str) ->
   return null if str == ''
   str = str
-    .replace(/'/g, '')
+    .replace(/\'/g, '')
     .replace(/\%/g, 'percent')
     .replace(/\£/g, 'pounds')
     .replace(/\$/g, 'dollars')
@@ -20,7 +20,7 @@ questionBoardController =
 
   apiCreate: (req, res) ->
     url = urlString(req.body.url)
-    safeDescription = req.body.description.replace(/[^a-z0-9_]+/g, '')
+    safeDescription = if req.body.description then req.body.description.replace(/[^a-zA-Z0-9_!?& ]+/g, '') else null
     QuestionBoard.create({url, description: safeDescription}).then (questionBoard) ->
       req.io.of('/'+questionBoard.url) # ensure namespace exists
       res.status(200)
@@ -35,7 +35,7 @@ questionBoardController =
       res.json questionBoard
     onNotFound = ->
       url = urlString(req.query.url)
-      safeDescription = req.query.description.replace(/[^a-z0-9_]+/g, '')
+      safeDescription = if req.query.description then req.query.description.replace(/[^a-zA-Z0-9_!?& ]+/g, '') else null
       QuestionBoard.create({url, description: safeDescription}).then (questionBoard) ->
         req.io.of('/'+questionBoard.url) # ensure namespace exists
         res.json questionBoard 

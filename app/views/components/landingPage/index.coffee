@@ -27,19 +27,21 @@ LandingPage = React.createClass
     urlString = (str) ->
       return null if str == ''
       str = str
-        .replace(/'/g, '')
+        .replace(/\'/g, '')
         .replace(/\%/g, 'percent')
         .replace(/\£/g, 'pounds')
         .replace(/\$/g, 'dollars')
         .replace(/&|\+/g, 'and')
         .replace(/[^a-z0-9_]+/g, '-')
-        .replace(/^-|-$/g, '')
         .toLowerCase()
       str
     @setState url: urlString(ev.target.value)
 
   handleDescriptionChange: (ev) ->
-    @setState description: ev.target.value.replace(/[^a-z0-9_!?&]+/g, '')
+    descriptionString = (str) ->
+      return null if str == ''
+      str = str.replace(/[^a-zA-Z0-9_!?& ]+/g, '')
+    @setState description: descriptionString(ev.target.value)
 
   handleSubmit: (ev) ->
     ev.preventDefault()

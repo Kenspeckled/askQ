@@ -94,14 +94,12 @@ questionController =
       res.send (if process.env.SHOW_QS_ERRORS then error else false)
 
   index: (req, res) ->
-    url = req.params.url
-    description = req.query.description
+    url = urlString(req.params.url)
+    safeDescription = if req.query.description then req.query.description.replace(/[^a-zA-Z0-9_!?& ]+/g, '') else null
     questionBoardPropsPromise = new Promise (resolve) ->
       QuestionBoard.findBy({url}).then (questionBoard) ->
         resolve questionBoard
       , ->
-        url = urlString(req.params.url)
-        safeDescription = req.query.description.replace(/[^a-z0-9_]+/g, '')
         QuestionBoard.create({url, description: safeDescription}).then (newQuestionBoard) ->
           req.io.of('/'+newQuestionBoard.url) # ensure namespace exists
           resolve newQuestionBoard
