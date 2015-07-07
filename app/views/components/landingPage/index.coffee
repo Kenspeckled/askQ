@@ -24,10 +24,22 @@ LandingPage = React.createClass
     @setState url: @generateRandomUrl()
 
   handleUrlChange: (ev) ->
-    @setState url: ev.target.value
+    urlString = (str) ->
+      return null if str == ''
+      str = str
+        .replace(/'/g, '')
+        .replace(/\%/g, 'percent')
+        .replace(/\£/g, 'pounds')
+        .replace(/\$/g, 'dollars')
+        .replace(/&|\+/g, 'and')
+        .replace(/[^a-z0-9_]+/g, '-')
+        .replace(/^-|-$/g, '')
+        .toLowerCase()
+      str
+    @setState url: urlString(ev.target.value)
 
   handleDescriptionChange: (ev) ->
-    @setState description: ev.target.value
+    @setState description: ev.target.value.replace(/[^a-z0-9_!?&]+/g, '')
 
   handleSubmit: (ev) ->
     ev.preventDefault()

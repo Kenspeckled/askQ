@@ -8,6 +8,19 @@ QuestionIndex = require 'views/components/questions/index.coffee'
 notFound = (res) ->
   res.sendStatus(404)
 
+urlString = (str) ->
+  return null if str == ''
+  str = str
+    .replace(/'/g, '')
+    .replace(/\%/g, 'percent')
+    .replace(/\£/g, 'pounds')
+    .replace(/\$/g, 'dollars')
+    .replace(/&|\+/g, 'and')
+    .replace(/[^a-z0-9_]+/g, '-')
+    .replace(/^-|-$/g, '')
+    .toLowerCase()
+  str
+
 createNewSession = ->
   d = new Date()
   sessionId = (+d).toString(36) + _utilities.randomString(28)
@@ -87,7 +100,9 @@ questionController =
       QuestionBoard.findBy({url}).then (questionBoard) ->
         resolve questionBoard
       , ->
-        QuestionBoard.create({url, description}).then (newQuestionBoard) ->
+        url = urlString(req.params.url)
+        safeDescription = req.query.description.replace(/[^a-z0-9_]+/g, '')
+        QuestionBoard.create({url, description: safeDescription}).then (newQuestionBoard) ->
           req.io.of('/'+newQuestionBoard.url) # ensure namespace exists
           resolve newQuestionBoard
     questionBoardPropsPromise.then (questionBoard) ->
