@@ -3,10 +3,25 @@ QuestionBoard = require 'models/questionBoard.coffee'
 notFound = (res) ->
   res.sendStatus(404)
 
+urlString = (str) ->
+  return null if str == ''
+  str = str
+    .replace(/'/g, '')
+    .replace(/\%/g, 'percent')
+    .replace(/\£/g, 'pounds')
+    .replace(/\$/g, 'dollars')
+    .replace(/&|\+/g, 'and')
+    .replace(/[^a-z0-9_]+/g, '-')
+    .replace(/^-|-$/g, '')
+    .toLowerCase()
+  str
+
 questionBoardController =
 
   apiCreate: (req, res) ->
-    QuestionBoard.create({url: req.body.url, description: req.body.description}).then (questionBoard) ->
+    url = urlString(req.body.url)
+    safeDescription = req.body.description.replace(/[^a-z0-9_]+/g, '')
+    QuestionBoard.create({url, description: safeDescription}).then (questionBoard) ->
       req.io.of('/'+questionBoard.url) # ensure namespace exists
       res.status(200)
       res.json questionBoard 
@@ -19,7 +34,9 @@ questionBoardController =
     onSuccess = (questionBoard) ->
       res.json questionBoard
     onNotFound = ->
-      QuestionBoard.create({url: req.query.url, description: req.query.description}).then (questionBoard) ->
+      url = urlString(req.query.url)
+      safeDescription = req.query.description.replace(/[^a-z0-9_]+/g, '')
+      QuestionBoard.create({url, description: safeDescription}).then (questionBoard) ->
         req.io.of('/'+questionBoard.url) # ensure namespace exists
         res.json questionBoard 
     findByArgs = if req.params.id then {id: req.params.id} else req.query
